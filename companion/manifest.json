@@ -1,0 +1,45 @@
+{
+	"id": "cuemanager-cuesheetconnector",
+	"name": "Cue Sheet Connector - Control Your Rundown",
+	"shortname": "cuemanager-cuesheetconnector",
+	"description": "Collaborative real-time rundowns, schedules, timeliens, and project management tools for live events.",
+	"version": "1.0.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-cuemanager-cuesheetconnector.git",
+	"bugs": "https://github.com/bitfocus/companion-module-cuemanager-cuesheetconnector/issues",
+	"maintainers": [
+		{
+			"name": "Sean Lathan",
+			"email": "sean@cuemanager.com"
+		}
+	],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "1.5.1",
+		"entrypoint": "../main.js"
+	},
+	"legacyIds": [],
+	"manufacturer": "Cue Manager",
+	"products": ["Cue Sheet Connector - Control Your Rundown"],
+	"keywords": [
+		"cue",
+		"manager",
+		"shof",
+		"rundown",
+		"ontime",
+		"time",
+		"timer",
+		"qlab",
+		"schedule",
+		"scheduling",
+		"showflow",
+		"control",
+		"present",
+		"show",
+		"countdown",
+		"dsan",
+		"studio",
+		"flow"
+	]
+}
