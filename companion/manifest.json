@@ -3,7 +3,7 @@
 	"name": "Cue Sheet Connector - Control Your Rundown",
 	"shortname": "cuemanager-cuesheetconnector",
 	"description": "Collaborative real-time rundowns, schedules, timeliens, and project management tools for live events.",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-cuemanager-cuesheetconnector.git",
 	"bugs": "https://github.com/bitfocus/companion-module-cuemanager-cuesheetconnector/issues",
