@@ -2,9 +2,17 @@
 
 class Helpers{
     updateStatus(self, status, status_description){
-        self.updateStatus(status, status_description);
-        self.setVariableValues({'status': status});
-        self.setVariableValues({'status_description': status_description});
+        // Set undefined/null description to empty string.
+        if(status_description === undefined || status_description === null){
+            status_description = '';
+        }
+        
+        // Change status if different from current status.
+        if(status != self.getVariableValue('status') || status_description != self.getVariableValue('status_description')){
+            self.updateStatus(status, status_description);
+            self.setVariableValues({'status': status});
+            self.setVariableValues({'status_description': status_description});
+        }
     }
     
     validateCMSettings(config){
