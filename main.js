@@ -49,7 +49,7 @@ class ModuleInstance extends InstanceBase{
 			// Restart module on config update
 			this.destroy();
 			this.init(config);
-			this.log('info', '[Main] Config updated successfully.');
+			this.log('debug', '[Main] Config updated successfully.');
 		} else{
 			// Connection has not been setup yet or is missing config values from user
 			this.updateStatus('Setup Required', settingsValidation);

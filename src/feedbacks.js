@@ -2,7 +2,6 @@ const { combineRgb } = require('@companion-module/base');
 const Helpers = require('./helpers');
 
 module.exports = async function(self){
-	console.log('FEEDBACK INIT');
 	self.setFeedbackDefinitions({
 		over_under_button_color_feedback: {
 			type: 'advanced',

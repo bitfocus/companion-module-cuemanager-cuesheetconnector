@@ -2,7 +2,7 @@ const Helpers = require('./helpers');
 
 class Clock{
     initClock(self){
-        self.log('info', '[Clock] Initializing clock...');
+        self.log('debug', '[Clock] Initializing clock...');
         
         // Update clock times
         setInterval(() =>{
@@ -114,7 +114,7 @@ class Clock{
             
             var url = Helpers.trim(self.config.time_service_endpoint, '/');
             
-            self.log('info', '[Clock] Clock is calling Cue Manager time service...');
+            self.log('debug', '[Clock] Clock is calling Cue Manager time service...');
             
             
             // Set client timestamp to calculate network latency
@@ -205,8 +205,8 @@ class Clock{
                                         self.setVariableValues({ 'device_time_adjusted_human': this.formatMilliseconds(clock_sync_offset, true)});
                                     }
                                     
-                                    self.log('info', '[Clock] Device time sync is '+device_time_sync_status);
-                                    self.log('info', '[Clock] Device time offset is '+clock_sync_offset);
+                                    self.log('debug', '[Clock] Device time sync is '+device_time_sync_status);
+                                    self.log('debug', '[Clock] Device time offset is '+clock_sync_offset);
                                     
                                     // Set device timezone variables
                                     const deviceTzOffset = new Date().getTimezoneOffset();
@@ -217,11 +217,11 @@ class Clock{
                                     self.setVariableValues({'device_timezone_offset_milliseconds': deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds)});
                                     self.setVariableValues({'device_timezone_offset_seconds': deviceTzOffsetSign+Math.abs(Math.floor(deviceTzOffsetInMilliseconds / 1000))});
                                     
-                                    self.log('info', '[Clock] Device timezone is '+Intl.DateTimeFormat().resolvedOptions().timeZone);
-                                    self.log('info', '[Clock] Device timezone offset is '+deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds)+'ms');
+                                    self.log('debug', '[Clock] Device timezone is '+Intl.DateTimeFormat().resolvedOptions().timeZone);
+                                    self.log('debug', '[Clock] Device timezone offset is '+deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds)+'ms');
                                     
                                 } else{
-                                    self.log('info', '[Clock] Clock sync difference not enough to update. ('+Math.abs(old_clock_sync_offset - clock_sync_offset)+')ms');
+                                    self.log('debug', '[Clock] Clock sync difference not enough to update. ('+Math.abs(old_clock_sync_offset - clock_sync_offset)+')ms');
                                 }
                             } else{
                                 // Time data type is not string

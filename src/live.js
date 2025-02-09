@@ -52,7 +52,7 @@ module.exports = function (self) {
         if(!Helpers.empty(self, 'config', 'personal_access_token')){
             if(!Helpers.empty(current_position, 'sheet', 'uuid')){ // Only call live service if there is a sheet connected
                 
-                self.log('info', '[Live] Live service connection opened.');
+                self.log('debug', '[Live] Live service connection opened.');
                 
                 
                 // Store the fact that we have initiated this network call.
@@ -78,7 +78,7 @@ module.exports = function (self) {
                 }
 
                 fetch(url, options).then(res => {
-                    self.log('info', '[Live] Live service connection closed with HTTP' + res.status + '.');
+                    self.log('debug', '[Live] Live service connection closed with HTTP' + res.status + '.');
                     
                     // Store the fact that we have finished this network call.
                     live_service_call_status = 3;
@@ -160,7 +160,7 @@ module.exports = function (self) {
                     self.log('error', '[Live] '+error);
                 });
             } else{
-                self.log('info', '[Live] Sheet not set.');
+                self.log('debug', '[Live] Sheet not set.');
                 
                 // CLEAR BUTTON TEXT
                 // Define only cue manager variables. We don't want to clear device/session variables.
@@ -197,9 +197,9 @@ module.exports = function (self) {
             
             // Update companion variables
             if(!Helpers.empty(data, 'updates', 'sheet', 'query_timestamp')){
-                self.log('info', '[Live] Sheet timestamp retrieved.');
+                self.log('debug', '[Live] Sheet timestamp retrieved.');
                 if(Helpers.isset(data, 'updates', 'sheet', 'current_position_row_name')){
-                    self.log('info', '[Live] Sheet position retrieved.');
+                    self.log('debug', '[Live] Sheet position retrieved.');
                     
 
                     // Clear over/under timers
@@ -327,7 +327,7 @@ module.exports = function (self) {
                         // We have already tried recently, we don't want to call now. Wait to prevent rapid call loops
                         // Log that we will check again soon...
                         if(live_service_unauthorized == false){
-                            self.log('info', '[Live] Checking live service shortly...');
+                            self.log('debug', '[Live] Checking live service shortly...');
                         } else{
                             self.log('error', '[Live] Personal access token not authorized.');
                         }
@@ -340,13 +340,13 @@ module.exports = function (self) {
                         live_service_call_retries = 1;
                     }
                 } else{
-                    self.log('info', '[Live] Live service call is active.');
+                    self.log('debug', '[Live] Live service call is active.');
                 }
             } else{
-                self.log('info', '[Live] Already checking if calling live service is active.');
+                self.log('debug', '[Live] Already checking if calling live service is active.');
             }
         } else{
-            self.log('info', '[Live] No sheet connected.');
+            self.log('debug', '[Live] No sheet connected.');
         }
         
         // VARIABLE(S) USED IN OTHER FUNCTIONS
@@ -641,7 +641,7 @@ module.exports = function (self) {
                     url += '?include[]=current_position_cells&include[]=next_position_cells';
                 }
                 
-                self.log('info', '[Live] Live is calling Cue Manager companion service...');
+                self.log('debug', '[Live] Live is calling Cue Manager companion service...');
                 
                 fetch(url, options).then(res => {
                     

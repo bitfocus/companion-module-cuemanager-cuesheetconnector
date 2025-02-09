@@ -139,7 +139,7 @@ function callCueManagerCompanionService(self, method, endpoint, jsonData){
 				url += '?include[]=current_position_cells&include[]=next_position_cells';
 			}
 			
-			self.log('info', '[Actions] Actions is calling Cue Manager companion service...');
+			self.log('debug', '[Actions] Actions is calling Cue Manager companion service...');
 			
 			fetch(url, options).then(res => {
 				const status_code = res.status;
