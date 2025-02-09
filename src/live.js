@@ -865,7 +865,7 @@ module.exports = function (self) {
                 );
                 self.checkFeedbacks('over_under_button_color_feedback');
             }
-        }, 113);
+        }, 100);
         
         
         try_first_call_interval = setInterval(function(self) {
