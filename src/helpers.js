@@ -1,6 +1,3 @@
-// Helper functions used throughout the module
-const { CompanionPresetFeedback } = require('@companion-module/base');
-
 class Helpers{
     updateStatus(self, status, status_description){
         // Set undefined/null description to ok or empty string.

@@ -1,6 +1,3 @@
-const { combineRgb } = require('@companion-module/base');
-const Helpers = require('./helpers');
-
 module.exports = async function(self){
 	self.setFeedbackDefinitions({
 		change_button_style_on_conditional: {

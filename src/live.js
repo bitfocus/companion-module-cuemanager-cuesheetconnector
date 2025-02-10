@@ -1,4 +1,3 @@
-const { CompanionPresetFeedback } = require('@companion-module/base');
 const Constants = require('./constants');
 const Helpers = require('./helpers');
 const Clock = require('./clock');
