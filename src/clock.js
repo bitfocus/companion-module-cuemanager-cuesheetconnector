@@ -38,14 +38,13 @@ class Clock{
             NOTE:
             var `now` should be rounded to nearest second for a couple reasons:
             1.) Time being set to the nearest second keeps module timers changing together and not changing at different times.
-            2.) Math.round specifically keeps us closest to the same second as external devices and browsers
-                since one device's unix time might be at xxx1999ms and another at xxx2001ms.
+            2.) The beginning of the current second is what the UI's clock uses, so match that here by using Math.floor.
         */
         
         if(Helpers.empty(local_time_milliseconds)){
-            var now = Math.round(Date.now() / 1000) * 1000;
+            var now = Math.floor(Date.now() / 1000) * 1000;
         } else{
-            var now = Math.round(parseInt(local_time_milliseconds) / 1000) * 1000;
+            var now = Math.floor(parseInt(local_time_milliseconds) / 1000) * 1000;
             
             // Handle timezone offset
             var tz_offset = self.getVariableValue('device_timezone_offset_milliseconds');
@@ -82,14 +81,13 @@ class Clock{
             NOTE:
             var `now` should be rounded to nearest second for a couple reasons:
             1.) Time being set to the nearest second keeps module timers changing together and not changing at different times.
-            2.) Math.round specifically keeps us closest to the same second as external devices and browsers
-                since one device's unix time might be at xxx1999ms and another at xxx2001ms.
+            2.) The beginning of the current second is what the UI's clock uses, so match that here by using Math.floor.
         */
        
         if(Helpers.empty(utc_time_milliseconds)){
-            var now = Math.round(Date.now() / 1000) * 1000;
+            var now = Math.floor(Date.now() / 1000) * 1000;
         } else{
-            var now =  Math.round(parseInt(utc_time_milliseconds) / 1000) * 1000;
+            var now =  Math.floor(parseInt(utc_time_milliseconds) / 1000) * 1000;
         }
         
         // Handle device time offset
