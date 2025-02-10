@@ -567,7 +567,7 @@ module.exports = function (self) {
                     
                     self.setVariableValues({'sheet_over_under_sign': '-'});
                     self.setVariableValues({'sheet_over_under_arrow': '▼'});
-                    self.setVariableValues({'sheet_over_under_hhmmss': '00:00:00'});
+                    self.setVariableValues({'sheet_over_under_hhmmss': '▼00:00:00'});
                     self.setVariableValues({'sheet_over_under_hh': '00'});
                     self.setVariableValues({'sheet_over_under_mm': '00'});
                     self.setVariableValues({'sheet_over_under_ss': '00'});
@@ -640,8 +640,9 @@ module.exports = function (self) {
                 }
             } else{
                 // No sheet is currently selected. Default companion variables.
-                
-                self.setVariableValues({'sheet_over_under_hhmmss': '00:00:00'});
+                self.setVariableValues({'sheet_over_under_sign': '-'});
+                self.setVariableValues({'sheet_over_under_arrow': '▼'});
+                self.setVariableValues({'sheet_over_under_hhmmss': '▼00:00:00'});
                 self.setVariableValues({'sheet_over_under_hh': '00'});
                 self.setVariableValues({'sheet_over_under_mm': '00'});
                 self.setVariableValues({'sheet_over_under_ss': '00'});
