@@ -599,14 +599,9 @@ class Helpers{
 
         // Calculate hours, minutes, and seconds
         const hours = Math.floor(absUnixSeconds / 3600);
-        const minutes = Math.floor((absUnixSeconds % 3600) / 60);
-        const seconds = absUnixSeconds % 60;
-
-        // Optionally, show hours without exceeding 24 (e.g., days ignored)
-        const hoursRemaining = hours % 24;
 
         // Format the time string
-        let formattedTime = `${hoursRemaining.toString().padStart(2, '0')}`;
+        let formattedTime = `${hours.toString().padStart(2, '0')}`;
 
         // If the time is negative, prepend with a minus sign
         if(unixMilliseconds == '0'){
@@ -631,9 +626,7 @@ class Helpers{
         const absUnixSeconds = Math.abs(unixSeconds);
 
         // Calculate minutes and seconds
-        const hours = Math.floor(absUnixSeconds / 3600);
         const minutes = Math.floor((absUnixSeconds % 3600) / 60);
-        const seconds = absUnixSeconds % 60;
 
         // Format the time string
         let formattedTime = `${minutes.toString().padStart(2, '0')}`;
@@ -661,8 +654,6 @@ class Helpers{
         const absUnixSeconds = Math.abs(unixSeconds);
 
         // Calculate minutes and seconds
-        const hours = Math.floor(absUnixSeconds / 3600);
-        const minutes = Math.floor((absUnixSeconds % 3600) / 60);
         const seconds = absUnixSeconds % 60;
 
         // Format the time string
