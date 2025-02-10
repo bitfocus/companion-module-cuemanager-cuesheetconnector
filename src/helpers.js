@@ -14,7 +14,6 @@ class Helpers{
             self.updateStatus(status, status_description);
             self.setVariableValues({'status': status});
             self.setVariableValues({'status_description': status_description});
-            self.checkFeedbacks('change_button_style_on_conditional');
         }
     }
     
