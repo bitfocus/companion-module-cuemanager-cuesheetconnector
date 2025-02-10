@@ -396,18 +396,9 @@ module.exports = function (self) {
         
         // Reset companion variables
         Helpers.resetVariables(self, [
-            'current_cue_over_under_',
-            'current_cue_elapsed_',
-            'current_cue_remaining_',
-            'current_cue_duration_',
-            'next_cue_duration_'
+            'current_cue_',
+            'next_cue_'
         ]);
-        
-        // Loop through 4 cell text column names (We support 4) and clear them
-        var i;
-        for(i = 1; i <= 4; i ++){
-            self.setVariableValues({['current_cue_cell_text_column_'+i]: ''});
-        }
     }
     
     function setCurrentCueOverUnder(updated_at){
