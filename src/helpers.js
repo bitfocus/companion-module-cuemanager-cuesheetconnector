@@ -200,6 +200,7 @@ class Helpers{
     decodeHTMLEntities(str){
         if(typeof str == 'string'){
             const entityMap = {
+                '&nbsp;': ' ',
                 '&amp;': '&',
                 '&lt;': '<',
                 '&gt;': '>',
@@ -245,53 +246,7 @@ class Helpers{
     }
 
     stripValidTags(inputString) {
-        const validTagName = /^[a-z][a-z0-9\-]*$/i; // Valid HTML tag name pattern
-        let result = '';
-        let insideTag = false;
-        let tagNameBuffer = '';
-        let buffer = '';
-
-        for (let i = 0; i < inputString.length; i++) {
-            const char = inputString[i];
-
-            if (char === '<') {
-                // Flush the buffer if we're entering a tag
-                result += buffer;
-                buffer = '';
-                insideTag = true;
-                tagNameBuffer = '';
-            } else if (char === '>') {
-                // End of tag: Strip all tags with attributes, keep others (like <notanhtmltag>)
-                if (insideTag) {
-                    const trimmedTagName = tagNameBuffer.trim();
-                    const isClosingTag = trimmedTagName.startsWith('/');
-                    const isSelfClosing = trimmedTagName.endsWith('/');
-                    const cleanedTagName = trimmedTagName
-                        .replace(/^\/|\/$/g, '') // Remove leading '/' or trailing '/'
-                        .trim();
-
-                    // Check if the tag has attributes (such as style="...", class="...", etc.)
-                    if (/\s+[a-z\-]+=("[^"]*"|'[^']*')/i.test(tagNameBuffer) || validTagName.test(cleanedTagName)) {
-                        // Remove all tags that either have attributes or are standard HTML tags
-                    } else {
-                        // Otherwise, keep the tag as is (non-standard tags like <notanhtmltag>)
-                        result += '<' + tagNameBuffer + '>';
-                    }
-                }
-                insideTag = false;
-            } else if (insideTag) {
-                // Build the tag name buffer if inside a tag
-                tagNameBuffer += char;
-            } else {
-                // Build the text buffer if outside of a tag
-                buffer += char;
-            }
-        }
-
-        // Append any remaining text in the buffer
-        result += buffer;
-
-        return result;
+        return inputString.replace(/<\/?([a-z][a-z0-9\-]*)(\s+[^>]*)?>/gi, '');
     }
 
     processHTMLLineBreaks(text){
