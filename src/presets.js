@@ -457,8 +457,8 @@ module.exports = function (self) {
             name: 'Current Cue Over/Under HH:MM:SS',
             style: {
                 show_topbar: false,
-                text: 'Cue\n$(cuemanager-cuesheetconnector:current_cue_over_under_hhmmss)',
-                size: '13',
+                text: 'Cue\n$(cuemanager-cuesheetconnector:current_cue_over_under_hh):$(cuemanager-cuesheetconnector:current_cue_over_under_mm):$(cuemanager-cuesheetconnector:current_cue_over_under_ss)',
+                size: '16',
                 color: '#000000',
                 bgcolor: '#0D9CF3',
             },
@@ -600,8 +600,8 @@ module.exports = function (self) {
             name: 'Current Cue Over/Under MM:SS',
             style: {
                 show_topbar: false,
-                text: 'Cue Sheet\n$(cuemanager-cuesheetconnector:sheet_over_under_hhmmss)',
-                size: '13',
+                text: 'Sheet\n$(cuemanager-cuesheetconnector:sheet_over_under_hh):$(cuemanager-cuesheetconnector:sheet_over_under_mm):$(cuemanager-cuesheetconnector:sheet_over_under_ss)',
+                size: '16',
                 color: '#FFFFFF',
                 bgcolor: '#000000',
             },
