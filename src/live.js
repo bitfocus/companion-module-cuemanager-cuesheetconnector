@@ -10,21 +10,39 @@ const Clock = require('./clock');
 module.exports = function (self) {
     
     // Global variables used/updated in functions
-    var checking_live_service_active = false;
+    var checking_live_service_active;
     var try_first_call_interval;
-    var current_position = {};
-    var live_service_first_called = false;
-    var live_service_last_5xx_error = 0;
-    var live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
-    var live_service_call_status = 1;
-    var live_service_call_status_time = self.getVariableValue('clock_utc_unix_seconds');
-    var live_service_call_retries = 0;
-    var live_service_unauthorized = false;
-    var live_sheet_starts_at = '';
-    var live_sheet_ends_at = '';
-    var live_current_cue_created_at = '';
-    var live_current_cue_updated_at = '';
+    var current_position;
+    var live_service_first_called;
+    var live_service_last_5xx_error;
+    var live_updated_after;
+    var live_service_call_status;
+    var live_service_call_status_time;
+    var live_service_call_retries;
+    var live_service_unauthorized;
+    var live_sheet_starts_at;
+    var live_sheet_ends_at;
+    var live_current_cue_created_at;
+    var live_current_cue_updated_at;
     
+    function init_module_global_variables(){
+        checking_live_service_active = false;
+        try_first_call_interval;
+        current_position = {};
+        live_service_first_called = false;
+        live_service_last_5xx_error = 0;
+        live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
+        live_service_call_status = 1;
+        live_service_call_status_time = self.getVariableValue('clock_utc_unix_seconds');
+        live_service_call_retries = 0;
+        live_service_unauthorized = false;
+        live_sheet_starts_at = '';
+        live_sheet_ends_at = '';
+        live_current_cue_created_at = '';
+        live_current_cue_updated_at = '';
+    }
+    
+    init_module_global_variables();
     
     
     
@@ -131,6 +149,20 @@ module.exports = function (self) {
                             
                             Helpers.updateStatus(self, 'unknown_warning', 'Live Status: '+res.status+' - '+Helpers.getStatusCodeText(res.status));
                             self.log('error', '[Live] Live service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
+                            
+                            if(res.status == 404){
+                                // CLEAR BUTTON TEXT
+                                // Define only cue manager variables. We don't want to clear device/session variables.
+                                init_module_global_variables();
+                                clearCurrentCueOverUnder();
+                                Helpers.resetVariables(self, [
+                                    'project_',
+                                    'sheet_',
+                                    'current_cue_',
+                                    'next_cue_',
+                                    'following'
+                                ]);
+                            }
                             
                         } else if(res.status >= 500){
                             // Handle 5xx errors

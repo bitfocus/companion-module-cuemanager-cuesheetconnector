@@ -268,7 +268,7 @@ function callCueManagerCompanionService(self, method, endpoint, jsonData){
 						
 						// Clear cue manager variables.
 						if(endpoint == 'current_position' && Helpers.empty(jsonData, 'sheet', 'name')){
-							// Define only cue manager variables. We don't want to clear device/session variables.
+							// Clear variables by starts with.
 							Helpers.resetVariables(self, [
 								'project_',
 								'sheet_',
