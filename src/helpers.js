@@ -1,10 +1,15 @@
 // Helper functions used throughout the module
+const { CompanionPresetFeedback } = require('@companion-module/base');
 
 class Helpers{
     updateStatus(self, status, status_description){
-        // Set undefined/null description to empty string.
+        // Set undefined/null description to ok or empty string.
         if(status_description === undefined || status_description === null){
-            status_description = '';
+            if(status.toLowerCase() == 'ok'){
+                status_description = 'ok';
+            } else{
+                status_description = '';
+            }
         }
         
         // Change status if different from current status.
@@ -12,6 +17,7 @@ class Helpers{
             self.updateStatus(status, status_description);
             self.setVariableValues({'status': status});
             self.setVariableValues({'status_description': status_description});
+            self.checkFeedbacks('change_button_style_on_conditional');
         }
     }
     

@@ -875,7 +875,7 @@ module.exports = function (self) {
                     live_current_cue_created_at,
                     live_current_cue_updated_at
                 );
-                self.checkFeedbacks('over_under_button_color_feedback');
+                self.checkFeedbacks('change_button_style_on_conditional');
             }
         }, 100);
         

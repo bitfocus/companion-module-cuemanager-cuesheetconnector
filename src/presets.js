@@ -415,6 +415,37 @@ module.exports = function (self) {
             }],
             feedbacks: [],
         },
+        instance_status_description: { 
+            type: 'button',
+            category: 'Names',
+            name: 'Instance Status',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:status_description)',
+                size: 'auto',
+                color: '#FFFFFF',
+                bgcolor: '#000000',
+            },
+            steps: [{
+                down: [{
+                    actionId: 'get_current_position'
+                }],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'status',
+                        compare_value: 'ok',
+                        compare_as_lowercase: true,
+                        comparison_operator: '!==',
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF'
+                    }
+                }
+            ],
+        },
         
         
         
@@ -437,10 +468,14 @@ module.exports = function (self) {
             }],
             feedbacks: [
                 {
-                    feedbackId: 'over_under_button_color_feedback',
+                    feedbackId: 'change_button_style_on_conditional',
                     options: {
-                        variable: 'current_cue_over_under_sign',
-                        bgcolor: '#FF0000', // Red background when condition is true
+                        variable_id: 'current_cue_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF'
                     }
                 }
             ],
@@ -462,10 +497,14 @@ module.exports = function (self) {
             }],
             feedbacks: [
                 {
-                    feedbackId: 'over_under_button_color_feedback',
+                    feedbackId: 'change_button_style_on_conditional',
                     options: {
-                        variable: 'current_cue_over_under_sign',
-                        bgcolor: '#FF0000', // Red background when condition is true
+                        variable_id: 'current_cue_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF'
                     }
                 }
             ]
@@ -572,10 +611,14 @@ module.exports = function (self) {
             }],
             feedbacks: [
                 {
-                    feedbackId: 'over_under_button_color_feedback',
+                    feedbackId: 'change_button_style_on_conditional',
                     options: {
-                        variable: 'sheet_over_under_sign',
-                        bgcolor: '#FF0000', // Red background when condition is true
+                        variable_id: 'sheet_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF'
                     }
                 }
             ],

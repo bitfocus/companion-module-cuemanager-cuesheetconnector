@@ -8,7 +8,7 @@ module.exports = function (self) {
 		{
 			variableId: 'status',
 			name: 'The current status of the connection.',
-			_cmDefault: 'Initializing'
+			_cmDefault: 'connecting'
 		},
 		{
 			variableId: 'status_description',
