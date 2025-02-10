@@ -5,7 +5,7 @@ class Helpers{
     updateStatus(self, status, status_description){
         // Set undefined/null description to ok or empty string.
         if(status_description === undefined || status_description === null){
-            if(status.toLowerCase() == 'ok'){
+            if(status.toLocaleLowerCase() == 'ok'){
                 status_description = 'ok';
             } else{
                 status_description = '';
@@ -51,7 +51,7 @@ class Helpers{
     validateCueManagerDomain(url){
         if(typeof url == 'string'){
             // Make sure domain it HTTPS
-            if(url.substring(0, 8).toLowerCase() == 'https://'){
+            if(url.substring(0, 8).toLocaleLowerCase() == 'https://'){
                 
                 // Split the URL into domain parts.
                 var domain_parts = url.split('.');

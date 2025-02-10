@@ -280,19 +280,19 @@ class Clock{
     strtotime(text){
         if(typeof text == 'string'){
             // Handle the "now" string (current time)
-            if(text.toLowerCase() === 'now'){
+            if(text.toLocaleLowerCase() === 'now'){
                 return self.getVariableValue('clock_utc_unix_milliseconds'); // Current timestamp in seconds
             }
 
             // Handle the "tomorrow" string
-            if(text.toLowerCase() === 'tomorrow'){
+            if(text.toLocaleLowerCase() === 'tomorrow'){
                 let tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1); // Add one day
                 return tomorrow.getTime();
             }
 
             // Handle "yesterday" string
-            if(text.toLowerCase() === 'yesterday'){
+            if(text.toLocaleLowerCase() === 'yesterday'){
                 let yesterday = new Date();
                 yesterday.setDate(yesterday.getDate() - 1); // Subtract one day
                 return yesterday.getTime();
@@ -305,7 +305,7 @@ class Clock{
                 const now = new Date(self.getVariableValue('clock_utc_unix_milliseconds'));
                 let multiplier = parseInt(num, 10);
             
-                switch(unit.toLowerCase()){
+                switch(unit.toLocaleLowerCase()){
                     case 'second':
                     case 'seconds':
                         now.setSeconds(now.getSeconds() + multiplier);
