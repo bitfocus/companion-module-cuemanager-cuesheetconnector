@@ -106,6 +106,7 @@ module.exports = function (self) {
                                 // Determine what to do with the response
                                 if (live_service_unauthorized === true) {
                                     self.log('error', '[Live] Personal access token not authorized.');
+                                    Helpers.updateStatus(self, 'authentication_failure', 'Invalid personal access token.');
                                 } else if (Helpers.isset(returnedData, 'time')) {
                                     // Receive live service data
                                     receiveLiveServiceData(self, returnedData);
@@ -119,15 +120,16 @@ module.exports = function (self) {
                                 
                             } catch(error){
                                 caughtError = error;
-                                Helpers.updateStatus(self, 'Warning', 'JSON body not returned.');
+                                Helpers.updateStatus(self, 'unknown_warning', 'JSON body not returned.');
                                 self.log('error', '[Live] '+error);
                             }
                         }
 
+                        
                         if(res.status >= 400 && res.status < 500){
-                            // Handle 4xx errors
+                            // Handle other 4xx errors
                             
-                            Helpers.updateStatus(self, 'Live Status: ' + res.status, Helpers.getStatusCodeText(res.status));
+                            Helpers.updateStatus(self, 'unknown_warning', 'Live Status: '+res.status+' - '+Helpers.getStatusCodeText(res.status));
                             self.log('error', '[Live] Live service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
                             
                         } else if(res.status >= 500){
@@ -138,7 +140,7 @@ module.exports = function (self) {
                             
                             // If multiple 5xx errors have happened in a row, set companion status warning.
                             if(live_service_last_5xx_error > self.getVariableValue('clock_utc_unix_milliseconds') - 30000){
-                                Helpers.updateStatus(self, 'Live Status: ' + res.status, Helpers.getStatusCodeText(res.status));
+                                Helpers.updateStatus(self, 'unknown_warning', 'Live Status: '+res.status+' - '+Helpers.getStatusCodeText(res.status));
                             }
                             
                             // Set timestamp of this 5xx error so we can track it later
@@ -156,7 +158,7 @@ module.exports = function (self) {
                     live_service_call_status_time = self.getVariableValue('clock_utc_unix_seconds');
                     
                     // Display and log warning
-                    Helpers.updateStatus(self, 'Warning', 'Live network error.');
+                    Helpers.updateStatus(self, 'unknown_warning', 'Live network error.');
                     self.log('error', '[Live] '+error);
                 });
             } else{
@@ -174,7 +176,7 @@ module.exports = function (self) {
                 ]);
             }
         } else{
-            Helpers.updateStatus(self, 'Warning', 'Personal access token empty.');
+            Helpers.updateStatus(self, 'bad_config', 'Personal access token empty.');
             self.log('error', '[Live] Personal access token cannot be empty.');
         }
     }
@@ -659,7 +661,7 @@ module.exports = function (self) {
                                 current_position = jsonData;
 
                                 
-                                if(res.status === 200){
+                                if(res.status == 200){
                                     // Current position uuid
                                     if(Helpers.isset(jsonData, 'current_position', 'regarding_row_name')){
                                         self.setVariableValues({ 'current_cue_uuid': Helpers.buttonFriendlyText(jsonData.current_position.current_row_uuid) });
@@ -772,19 +774,29 @@ module.exports = function (self) {
                                             jsonData.sheet.duration_remaining_excluding_current
                                         );
                                     }
+                                } else if(res.status == 401){
+                                    Helpers.updateStatus(self, 'authentication_failure', 'Invalid personal access token.');
                                 }
 
                                 Helpers.updateStatus(self, 'ok');
                             } catch(error){
                                 caughtError = error;
-                                Helpers.updateStatus(self, 'Error', 'JSON body not returned.');
+                                Helpers.updateStatus(self, 'unknown_error', 'JSON body not returned.');
                                 self.log('error', '[Live] '+error);
                             }
                         }
 
                         if(res.status >= 400){
-                            Helpers.updateStatus(self, 'Companion Status: ' + res.status, Helpers.getStatusCodeText(res.status));
-                            self.log('error', '[Live] Companion service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
+                            if(res.status == 404){
+                                Helpers.updateStatus(self, 'unknown_warning', 'Companion Status: '+res.status+' - Sheet not connected.');
+                                self.log('error', '[Live] Companion service HTTP status: '+res.status+' - Sheet not connected.');
+                            } else if(res.status == 404){
+                                Helpers.updateStatus(self, 'unknown_warning', 'Companion Status: '+res.status+' - Sheet is too old to call cues.');
+                                self.log('error', '[Live] Companion service HTTP status: '+res.status+' - Sheet is too old to call cues.');
+                            } else{
+                                Helpers.updateStatus(self, 'unknown_warning', 'Companion Status: '+res.status+' - '+Helpers.getStatusCodeText(res.status));
+                                self.log('error', '[Live] Companion service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
+                            }
                             
                             // Clear cue manager variables if no sheet connected.
                             if(Helpers.empty(current_position, 'sheet')){
@@ -806,16 +818,16 @@ module.exports = function (self) {
 
                     });
                 }).catch(error => {
-                    Helpers.updateStatus(self, 'Warning', 'Live API network error.');
+                    Helpers.updateStatus(self, 'unknown_warning', 'API network error.');
                     self.log('error', '[Live] '+error);
                 });
             
             } else{
-                Helpers.updateStatus(self, 'Warning', settingsValidation);
+                Helpers.updateStatus(self, 'unknown_warning', settingsValidation);
                 self.log('error', '[Live] '+settingsValidation);
             }
         } else{
-            Helpers.updateStatus(self, 'Warning', 'Personal access token empty.');
+            Helpers.updateStatus(self, 'unknown_warning', 'Personal access token empty.');
             self.log('error', '[Live] Personal access token cannot be empty.');
         }
     }

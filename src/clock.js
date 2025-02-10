@@ -19,7 +19,7 @@ class Clock{
                 self.setVariableValues({'clock_local_hhmmss_12hr': Helpers.hhmmss12Hour(this.localTime(self, null))});
                 
                 if(self.getVariableValue('clock_sync_initialized') != '1'){
-                    Helpers.updateStatus(self, 'Warning', 'Initializing clock...');
+                    Helpers.updateStatus(self, 'connecting', 'Initializing clock...');
                 }
             }
         }, 100);
@@ -225,24 +225,24 @@ class Clock{
                                 }
                             } else{
                                 // Time data type is not string
-                                Helpers.updateStatus(self, 'Warning: Unable to get current time.');
+                                Helpers.updateStatus(self, 'unknown_warning', 'Unable to get current time.');
                                 self.log('error', '[Clock] Time service returned invalid data type for time.');
                             }
                         } else{
                             // No time data
-                            Helpers.updateStatus(self, 'Warning: Unable to get current time.');
+                            Helpers.updateStatus(self, 'unknown_warning', 'Unable to get current time.');
                             self.log('error', '[Clock] Time service returned no time data.');
                         }
                     }
                     
                     
                     if(status_code >= 400){
-                        Helpers.updateStatus(self, 'Warning: Unable to get current time.');
+                        Helpers.updateStatus(self, 'unknown_warning', 'Unable to get current time.');
                         self.log('error', '[Clock] Time service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
                     }
                 });
             }).catch(err => {
-                Helpers.updateStatus(self, 'Warning', 'Clock network error.');
+                Helpers.updateStatus(self, 'unknown_warning', 'Clock network error.');
                 self.log('error', '[Clock] '+err);
             });
         }

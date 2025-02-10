@@ -17,7 +17,7 @@ class ModuleInstance extends InstanceBase{
 	
 	// Initialize module
 	async init(config){
-		this.updateStatus('Initializing...');
+		this.updateStatus('connecting', 'Initializing module...');
 		
 		this.config = config;
 		
@@ -30,7 +30,7 @@ class ModuleInstance extends InstanceBase{
 			InitActions(this);
 			InitLiveMicroservice(this);
 		} else{
-			this.updateStatus('Setup Required', settingsValidation);
+			this.updateStatus('bad_config', settingsValidation);
 		}
 	}
 	
@@ -52,7 +52,7 @@ class ModuleInstance extends InstanceBase{
 			this.log('debug', '[Main] Config updated successfully.');
 		} else{
 			// Connection has not been setup yet or is missing config values from user
-			this.updateStatus('Setup Required', settingsValidation);
+			this.updateStatus('bad_config', settingsValidation);
 			this.log('error', '[Main] '+settingsValidation);
 		}
 	}

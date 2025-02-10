@@ -153,7 +153,7 @@ function callCueManagerCompanionService(self, method, endpoint, jsonData){
 						try{
 							jsonData = JSON.parse(responseData);
 
-							if(status_code === 200){
+							if(status_code == 200){
 								
 								// Position variables
 								if(Helpers.isset(jsonData, 'current_position', '_cue_number')){
@@ -241,19 +241,29 @@ function callCueManagerCompanionService(self, method, endpoint, jsonData){
 										);
 									}
 								}
+							} else if(status_code == 401){
+								Helpers.updateStatus(self, 'authentication_failure', 'Invalid personal access token.');
 							}
 
 							Helpers.updateStatus(self, 'ok');
 						} catch(error){
-							Helpers.updateStatus(self, 'Warning', 'JSON body not returned.');
+							Helpers.updateStatus(self, 'unknown_warning', 'JSON body not returned.');
 							self.log('error', '[Actions] '+error);
 						}
 					}
 
 					
 					if(status_code >= 400){
-						Helpers.updateStatus(self, 'Action Status: ' + status_code, Helpers.getStatusCodeText(status_code));
-						self.log('error', '[Actions] Companion service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
+						if(status_code == 404){
+							Helpers.updateStatus(self, 'unknown_warning', 'Action Status: '+status_code+' - Sheet not connected.');
+							self.log('error', '[Actions] Companion service HTTP status: '+res.status+' - Sheet not connected.');
+						} else if (status_code == 409){
+							Helpers.updateStatus(self, 'unknown_warning', 'Action Status: '+status_code+' - Sheet is too old to call cues.');
+							self.log('error', '[Actions] Companion service HTTP status: '+res.status+' - Sheet is too old to call cues.');
+						} else{
+							Helpers.updateStatus(self, 'unknown_warning', 'Action Status: '+status_code+' - '+Helpers.getStatusCodeText(status_code));
+							self.log('error', '[Actions] Companion service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
+						}
 						self.log('error', responseData);
 						
 						// Clear cue manager variables.
@@ -273,15 +283,15 @@ function callCueManagerCompanionService(self, method, endpoint, jsonData){
 					
 				});
 			}).catch(error => {
-				Helpers.updateStatus(self, 'Warning', 'Actions network error.');
+				Helpers.updateStatus(self, 'unknown_warning', 'Actions network error.');
 				self.log('error', '[Actions] '+error);
 			});
 			
 		} else{
-			Helpers.updateStatus(self, 'Warning', settingsValidation);
+			Helpers.updateStatus(self, 'unknown_warning', settingsValidation);
 		}
 	} else{
-		Helpers.updateStatus(self, 'Warning', 'Personal access token empty.');
+		Helpers.updateStatus(self, 'unknown_warning', 'Personal access token empty.');
 		self.log('error', '[Actions] Personal access token cannot be empty.');
 	}
 
