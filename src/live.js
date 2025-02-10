@@ -152,7 +152,7 @@ module.exports = function (self) {
                             
                             if(res.status == 404){
                                 // CLEAR BUTTON TEXT
-                                // Define only cue manager variables. We don't want to clear device/session variables.
+                                // Clear variables.
                                 init_module_global_variables();
                                 clearCurrentCueOverUnder();
                                 Helpers.resetVariables(self, [
