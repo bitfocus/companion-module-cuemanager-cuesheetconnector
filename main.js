@@ -76,8 +76,8 @@ class ModuleInstance extends InstanceBase{
 				value: `This module allows you to control your Cue Manager Cue Sheets.
 				Cue Manager offers collaborative real-time cue sheets (rundowns), schedules, and project management tools for 
 				live events. For more information about this module, visit
-				<a href="https://help.cuemanager.com/docs/bitfocus-companion-module/" target="_blank"
-				>https://help.cuemanager.com/docs/bitfocus-companion-module/</a>.`
+				<a href="https://help.cuemanager.com/docs/bitfocus-companion-module-v1/" target="_blank"
+				>https://help.cuemanager.com/docs/bitfocus-companion-module-v1/</a>.`
 			},
 			{
 				type: 'static-text',
