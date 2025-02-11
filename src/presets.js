@@ -758,7 +758,7 @@ module.exports = function (self) {
         sheet_over_under_arrow: {
             type: 'button',
             category: 'Timers',
-            name: 'Current Cue Over/Under Arrow',
+            name: 'Sheet Over/Under Arrow',
             style: {
                 show_topbar: false,
                 text: '$(cuemanager-cuesheetconnector:sheet_over_under_arrow)',
@@ -789,7 +789,7 @@ module.exports = function (self) {
         sheet_over_under_hh: {
             type: 'button',
             category: 'Timers',
-            name: 'Current Cue Over/Under HH',
+            name: 'Sheet Over/Under HH',
             style: {
                 show_topbar: false,
                 text: '$(cuemanager-cuesheetconnector:sheet_over_under_hh)',
@@ -820,7 +820,7 @@ module.exports = function (self) {
         sheet_over_under_mm: {
             type: 'button',
             category: 'Timers',
-            name: 'Current Cue Over/Under MM',
+            name: 'Sheet Over/Under MM',
             style: {
                 show_topbar: false,
                 text: '$(cuemanager-cuesheetconnector:sheet_over_under_mm)',
@@ -851,7 +851,7 @@ module.exports = function (self) {
         sheet_over_under_ss: {
             type: 'button',
             category: 'Timers',
-            name: 'Current Cue Over/Under SS',
+            name: 'Sheet Over/Under SS',
             style: {
                 show_topbar: false,
                 text: '$(cuemanager-cuesheetconnector:sheet_over_under_ss)',

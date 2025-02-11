@@ -182,12 +182,12 @@ module.exports = function (self) {
 		},
 		{
 			variableId: 'sheet_countdown_to_start_arrow',
-			name: 'The arrow part of cue sheet over/under time (▲/▼).',
+			name: 'The arrow part of countdown to start time (▲/▼).',
 			_cmDefault: '▼'
 		},
 		{
 			variableId: 'sheet_countdown_to_start_sign',
-			name: 'The arrow part of cue sheet over/under time (+/-).',
+			name: 'The arrow part of countdown to start time (+/-).',
 			_cmDefault: '-'
 		},
 		{
