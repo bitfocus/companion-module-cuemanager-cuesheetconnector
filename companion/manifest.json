@@ -1,7 +1,7 @@
 {
 	"id": "cuemanager-cuesheetconnector",
 	"name": "Cue Sheet Connector",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"shortname": "cuemanager-cuesheetconnector",
 	"description": "Collaborative real-time rundowns, schedules, timeliens, and project management tools for live events.",
 	"license": "MIT",
@@ -16,7 +16,7 @@
 	"runtime": {
 		"type": "node18",
 		"api": "nodejs-ipc",
-		"apiVersion": "1.5.1",
+		"apiVersion": "0.0.0",
 		"entrypoint": "../main.js"
 	},
 	"legacyIds": [],
