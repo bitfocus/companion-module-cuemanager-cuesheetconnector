@@ -439,9 +439,11 @@ module.exports = function (self) {
                         variable_id: 'status',
                         compare_value: 'ok',
                         compare_as_lowercase: true,
-                        comparison_operator: '!==',
+                        comparison_operator: '!=='
+                    },
+                    style:{
                         bgcolor: '#FF0000',
-                        color: '#FFFFFF'
+                        color: '#FFFFFF' 
                     }
                 }
             ],
@@ -473,9 +475,11 @@ module.exports = function (self) {
                         variable_id: 'current_cue_over_under_sign',
                         compare_value: '+',
                         compare_as_lowercase: true,
-                        comparison_operator: '===',
+                        comparison_operator: '==='
+                    },
+                    style:{
                         bgcolor: '#FF0000',
-                        color: '#FFFFFF'
+                        color: '#FFFFFF' 
                     }
                 }
             ],
@@ -503,8 +507,10 @@ module.exports = function (self) {
                         compare_value: '+',
                         compare_as_lowercase: true,
                         comparison_operator: '===',
+                    },
+                    style:{
                         bgcolor: '#FF0000',
-                        color: '#FFFFFF'
+                        color: '#FFFFFF' 
                     }
                 }
             ]
@@ -616,9 +622,11 @@ module.exports = function (self) {
                         variable_id: 'sheet_over_under_sign',
                         compare_value: '+',
                         compare_as_lowercase: true,
-                        comparison_operator: '===',
+                        comparison_operator: '==='
+                    },
+                    style:{
                         bgcolor: '#FF0000',
-                        color: '#FFFFFF'
+                        color: '#FFFFFF' 
                     }
                 }
             ],

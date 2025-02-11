@@ -1,10 +1,14 @@
 module.exports = async function(self){
 	self.setFeedbackDefinitions({
 		change_button_style_on_conditional: {
-			type: 'advanced',
+			type: 'boolean',
 			name: "Change Button Style on Conditional",
 			label: "Change Button Style on Conditional",
 			description: "Changes the button style when a condition is met.",
+			defaultStyle: {
+				bgcolor: '#FF0000',
+				color: '#FFFFFF',
+			},
 			options: [
 				{
 					type: 'textinput',
@@ -46,26 +50,6 @@ module.exports = async function(self){
 						return false;
 					}
 				},
-				{
-					type: 'colorpicker',
-					label: 'Background Color',
-					id: 'bgcolor',
-					default: '#FF0000', // Default to red
-					isVisible: () => {
-						// Make this variable hidden from user
-						return false;
-					}
-				},
-				{
-					type: 'colorpicker',
-					label: 'Text Color',
-					id: 'color',
-					default: '#FFFFFF', // Default to white
-					isVisible: () => {
-						// Make this variable hidden from user
-						return false;
-					}
-				}
 			],
 			callback: (feedback) => {
 				// Get the current variable and value to match
@@ -103,12 +87,7 @@ module.exports = async function(self){
 				}
 				
 				// Return styling if condition is true.
-				if(return_color){
-					return {
-						bgcolor: feedback.options.bgcolor,
-						color: feedback.options.color,
-					};
-				}
+				return return_color;
 			},
 		},
 	});
