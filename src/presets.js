@@ -515,6 +515,130 @@ module.exports = function (self) {
                 }
             ]
         },
+        current_cue_over_under_arrow: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under Arrow',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:current_cue_over_under_arrow)',
+                size: 'auto',
+                color: '#000000',
+                bgcolor: '#0D9CF3',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'current_cue_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ]
+        },
+        current_cue_over_under_hh: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under HH',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:current_cue_over_under_hh)',
+                size: '55',
+                color: '#000000',
+                bgcolor: '#0D9CF3',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'current_cue_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ]
+        },
+        current_cue_over_under_mm: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under MM',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:current_cue_over_under_mm)',
+                size: '55',
+                color: '#000000',
+                bgcolor: '#0D9CF3',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'current_cue_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ]
+        },
+        current_cue_over_under_ss: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under SS',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:current_cue_over_under_ss)',
+                size: '55',
+                color: '#000000',
+                bgcolor: '#0D9CF3',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'current_cue_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '===',
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ]
+        },
         current_cue_duration_hhmmss: {
             type: 'button',
             category: 'Timers',
@@ -555,7 +679,7 @@ module.exports = function (self) {
             name: 'Current Cue Remaining HH:MM:SS',
             style: {
                 show_topbar: false,
-                text: 'Cue Remaining\n-$(cuemanager-cuesheetconnector:current_cue_remaining_hhmmss)',
+                text: 'Cue Remaining\n$(cuemanager-cuesheetconnector:current_cue_remaining_hhmmss)',
                 size: '13',
                 color: '#000000',
                 bgcolor: '#0D9CF3',
@@ -631,6 +755,130 @@ module.exports = function (self) {
                 }
             ],
         },
+        sheet_over_under_arrow: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under Arrow',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:sheet_over_under_arrow)',
+                size: 'auto',
+                color: '#FFFFFF',
+                bgcolor: '#000000',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'sheet_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '==='
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ],
+        },
+        sheet_over_under_hh: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under HH',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:sheet_over_under_hh)',
+                size: '55',
+                color: '#FFFFFF',
+                bgcolor: '#000000',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'sheet_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '==='
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ],
+        },
+        sheet_over_under_mm: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under MM',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:sheet_over_under_mm)',
+                size: '55',
+                color: '#FFFFFF',
+                bgcolor: '#000000',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'sheet_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '==='
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ],
+        },
+        sheet_over_under_ss: {
+            type: 'button',
+            category: 'Timers',
+            name: 'Current Cue Over/Under SS',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:sheet_over_under_ss)',
+                size: '55',
+                color: '#FFFFFF',
+                bgcolor: '#000000',
+            },
+            steps: [{
+                down: [],
+                up: []
+            }],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'sheet_over_under_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '==='
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ],
+        },
         sheet_total_runtime_hhmmss: {
             type: 'button',
             category: 'Timers',
@@ -654,7 +902,7 @@ module.exports = function (self) {
             name: 'Total Time Remaining',
             style: {
                 show_topbar: false,
-                text: 'Total Time Remaining\n-$(cuemanager-cuesheetconnector:sheet_duration_remaining_hhmmss)',
+                text: 'Total Time Remaining\n$(cuemanager-cuesheetconnector:sheet_duration_remaining_hhmmss)',
                 size: '13',
                 color: '#FFFFFF',
                 bgcolor: '#000000',
@@ -671,7 +919,7 @@ module.exports = function (self) {
             name: 'Remaining After Cue',
             style: {
                 show_topbar: false,
-                text: 'Remaining After Cue\n-$(cuemanager-cuesheetconnector:sheet_duration_remaining_excluding_current_hhmmss)',
+                text: 'Remaining After Cue\n$(cuemanager-cuesheetconnector:sheet_duration_remaining_excluding_current_hhmmss)',
                 size: '13',
                 color: '#FFFFFF',
                 bgcolor: '#000000',
@@ -688,7 +936,7 @@ module.exports = function (self) {
             name: 'Countdown to Start',
             style: {
                 show_topbar: false,
-                text: 'Countdown\n$(cuemanager-cuesheetconnector:sheet_countdown_to_start_hhmmss)',
+                text: 'Countdown\n$(cuemanager-cuesheetconnector:sheet_countdown_to_start_hh):$(cuemanager-cuesheetconnector:sheet_countdown_to_start_mm):$(cuemanager-cuesheetconnector:sheet_countdown_to_start_ss)',
                 size: '13',
                 color: '#FFFFFF',
                 bgcolor: '#000000',
@@ -697,7 +945,21 @@ module.exports = function (self) {
                 down: [],
                 up: []
             }],
-            feedbacks: [],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'sheet_countdown_to_start_sign',
+                        compare_value: '+',
+                        compare_as_lowercase: true,
+                        comparison_operator: '==='
+                    },
+                    style:{
+                        bgcolor: '#FF0000',
+                        color: '#FFFFFF' 
+                    }
+                }
+            ],
         },
         
         

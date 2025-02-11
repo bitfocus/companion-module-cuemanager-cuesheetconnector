@@ -181,6 +181,16 @@ module.exports = function (self) {
 			_cmDefault: '0'
 		},
 		{
+			variableId: 'sheet_countdown_to_start_arrow',
+			name: 'The arrow part of cue sheet over/under time (▲/▼).',
+			_cmDefault: '▼'
+		},
+		{
+			variableId: 'sheet_countdown_to_start_sign',
+			name: 'The arrow part of cue sheet over/under time (+/-).',
+			_cmDefault: '-'
+		},
+		{
 			variableId: 'sheet_projected_finish',
 			name: 'The projected finish time of your sheet in 24 hour HH:MM:SS.',
 			_cmDefault: '00:00:00'

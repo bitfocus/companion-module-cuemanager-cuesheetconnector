@@ -159,7 +159,7 @@ module.exports = function (self) {
                                     'sheet_',
                                     'current_cue_',
                                     'next_cue_',
-                                    'following'
+                                    'following_'
                                 ]);
                             }
                             
@@ -203,7 +203,7 @@ module.exports = function (self) {
                     'sheet_',
                     'current_cue_',
                     'next_cue_',
-                    'following'
+                    'following_'
                 ]);
             }
         } else{
@@ -613,6 +613,8 @@ module.exports = function (self) {
                     self.setVariableValues({'sheet_countdown_to_start_ss': Helpers.ss(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
                     self.setVariableValues({'sheet_countdown_to_start_milliseconds': -Math.abs(sheet_countdown_to_start_milliseconds)});
                     self.setVariableValues({'sheet_countdown_to_start_seconds': -Math.floor(Math.abs(sheet_countdown_to_start_milliseconds / 1000))});
+                    self.setVariableValues({'sheet_countdown_to_start_sign': '-'});
+                    self.setVariableValues({'sheet_countdown_to_start_arrow': '▼'});
                 } else if(now < end_time && Helpers.empty(self.getVariableValue('current_cue_uuid'))){
                     self.setVariableValues({'sheet_countdown_to_start_hhmmss': Helpers.hhmmssOverUnder(Math.abs(sheet_countdown_to_start_milliseconds), true)});
                     self.setVariableValues({'sheet_countdown_to_start_hh': Helpers.hh(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
@@ -620,6 +622,8 @@ module.exports = function (self) {
                     self.setVariableValues({'sheet_countdown_to_start_ss': Helpers.ss(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
                     self.setVariableValues({'sheet_countdown_to_start_milliseconds': Math.abs(sheet_countdown_to_start_milliseconds)});
                     self.setVariableValues({'sheet_countdown_to_start_seconds': Math.floor(Math.abs(sheet_countdown_to_start_milliseconds / 1000))});
+                    self.setVariableValues({'sheet_countdown_to_start_sign': '+'});
+                    self.setVariableValues({'sheet_countdown_to_start_arrow': '▲'});
                 } else{
                     self.setVariableValues({'sheet_countdown_to_start_hhmmss': '00:00:00'});
                     self.setVariableValues({'sheet_countdown_to_start_hh': '00'});
@@ -627,20 +631,32 @@ module.exports = function (self) {
                     self.setVariableValues({'sheet_countdown_to_start_ss': '00'});
                     self.setVariableValues({'sheet_countdown_to_start_milliseconds': 0});
                     self.setVariableValues({'sheet_countdown_to_start_seconds': 0});
+                    self.setVariableValues({'sheet_countdown_to_start_sign': '-'});
+                    self.setVariableValues({'sheet_countdown_to_start_arrow': '▼'});
                 }
             } else{
-                // No sheet is currently selected. Default companion variables.
-                self.setVariableValues({'sheet_over_under_sign': '-'});
-                self.setVariableValues({'sheet_over_under_arrow': '▼'});
-                self.setVariableValues({'sheet_over_under_hhmmss': '▼00:00:00'});
-                self.setVariableValues({'sheet_over_under_hh': '00'});
-                self.setVariableValues({'sheet_over_under_mm': '00'});
-                self.setVariableValues({'sheet_over_under_ss': '00'});
-                self.setVariableValues({'sheet_over_under_milliseconds': '0'});
-                self.setVariableValues({'sheet_over_under_seconds': '0'});
-                self.setVariableValues({'sheet_projected_finish': '00:00:00'});
-                self.setVariableValues({'sheet_projected_finish_12hr': '00:00:00 AM'});
+                // No sheet is currently selected. Reset variables.
+                init_module_global_variables();
+                clearCurrentCueOverUnder();
+                Helpers.resetVariables(self, [
+                    'project_',
+                    'sheet_',
+                    'current_cue_',
+                    'next_cue_',
+                    'following_'
+                ]);
             }
+        } else{
+            // No sheet is currently selected. Reset variables.
+            init_module_global_variables();
+            clearCurrentCueOverUnder();
+            Helpers.resetVariables(self, [
+                'project_',
+                'sheet_',
+                'current_cue_',
+                'next_cue_',
+                'following_'
+            ]);
         }
     }
     
@@ -826,13 +842,13 @@ module.exports = function (self) {
                                 
                                 clearCurrentCueOverUnder();
                                 
-                                // Define only cue manager variables. We don't want to clear device/session variables.
+                                // Clear variables.
                                 Helpers.resetVariables(self, [
                                     'project_',
                                     'sheet_',
                                     'current_cue_',
                                     'next_cue_',
-                                    'following'
+                                    'following_'
                                 ]);
                             }
                         } else if(Helpers.empty(caughtError)){
