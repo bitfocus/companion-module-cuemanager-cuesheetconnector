@@ -12,8 +12,10 @@ class Helpers{
         // Change status if different from current status.
         if(status != self.getVariableValue('status') || status_description != self.getVariableValue('status_description')){
             self.updateStatus(status, status_description);
-            self.setVariableValues({'status': status});
-            self.setVariableValues({'status_description': status_description});
+            self.setVariableValues({
+                'status': status,
+                'status_description': status_description
+            });
         }
     }
     
@@ -310,17 +312,19 @@ class Helpers{
             }
             
             // Set the variables
-            self.setVariableValues({[cue_position+'_duration_hhmmss']: this.hhmmss(duration_milliseconds)});
-            self.setVariableValues({[cue_position+'_duration_milliseconds']: duration_milliseconds});
-            self.setVariableValues({[cue_position+'_duration_seconds']: duration});
-            self.setVariableValues({[cue_position+'_duration_hh']: this.hh(duration_milliseconds, false, false)});
-            self.setVariableValues({[cue_position+'_duration_mm']: this.mm(duration_milliseconds, false, false)});
-            self.setVariableValues({[cue_position+'_duration_ss']: this.ss(duration_milliseconds, false, false)});
-            self.setVariableValues({[cue_position+'_duration_offset_milliseconds']: offset_milliseconds});
-            self.setVariableValues({[cue_position+'_duration_offset_seconds']: offset});
-            self.setVariableValues({[cue_position+'_duration_offset_hh']: this.hh(offset_milliseconds, false, false)});
-            self.setVariableValues({[cue_position+'_duration_offset_mm']: this.mm(offset_milliseconds, false, false)});
-            self.setVariableValues({[cue_position+'_duration_offset_ss']: this.ss(offset_milliseconds, false, false)});
+            self.setVariableValues({
+                [cue_position+'_duration_hhmmss']: this.hhmmss(duration_milliseconds),
+                [cue_position+'_duration_milliseconds']: duration_milliseconds,
+                [cue_position+'_duration_seconds']: duration,
+                [cue_position+'_duration_hh']: this.hh(duration_milliseconds, false, false),
+                [cue_position+'_duration_mm']: this.mm(duration_milliseconds, false, false),
+                [cue_position+'_duration_ss']: this.ss(duration_milliseconds, false, false),
+                [cue_position+'_duration_offset_milliseconds']: offset_milliseconds,
+                [cue_position+'_duration_offset_seconds']: offset,
+                [cue_position+'_duration_offset_hh']: this.hh(offset_milliseconds, false, false),
+                [cue_position+'_duration_offset_mm']: this.mm(offset_milliseconds, false, false),
+                [cue_position+'_duration_offset_ss']: this.ss(offset_milliseconds, false, false)
+            });
         }
     }
     
@@ -328,12 +332,14 @@ class Helpers{
         
         // Set sheet total runtime variables
         if((!this.empty(duration_total) || duration_total == '0') && !isNaN(duration_total)){
-            self.setVariableValues({['sheet_total_runtime_hhmmss']: this.hhmmss(parseInt(duration_total) * 1000)});
-            self.setVariableValues({['sheet_total_runtime_hh']: this.hh(parseInt(duration_total) * 1000, false, false)});
-            self.setVariableValues({['sheet_total_runtime_mm']: this.mm(parseInt(duration_total) * 1000, false, false)});
-            self.setVariableValues({['sheet_total_runtime_ss']: this.ss(parseInt(duration_total) * 1000, false, false)});
-            self.setVariableValues({['sheet_total_runtime_seconds']: parseInt(duration_total)});
-            self.setVariableValues({['sheet_total_runtime_milliseconds']: Math.floor(parseInt(duration_total) * 1000)});
+            self.setVariableValues({
+                ['sheet_total_runtime_hhmmss']: this.hhmmss(parseInt(duration_total) * 1000),
+                ['sheet_total_runtime_hh']: this.hh(parseInt(duration_total) * 1000, false, false),
+                ['sheet_total_runtime_mm']: this.mm(parseInt(duration_total) * 1000, false, false),
+                ['sheet_total_runtime_ss']: this.ss(parseInt(duration_total) * 1000, false, false),
+                ['sheet_total_runtime_seconds']: parseInt(duration_total),
+                ['sheet_total_runtime_milliseconds']: Math.floor(parseInt(duration_total) * 1000)
+            });
         }
         
         // Set sheet duration remaining variables
@@ -342,31 +348,23 @@ class Helpers{
             && !isNaN(duration_remaining_excluding_current)
         ){
             self.setVariableValues({
-                'sheet_duration_remaining_excluding_current_hhmmss': this.hhmmss(parseInt(duration_remaining_excluding_current) * 1000)
-            });
-            self.setVariableValues({
-                'sheet_duration_remaining_excluding_current_hh': this.hh(parseInt(duration_remaining_excluding_current) * 1000, false, false)
-            });
-            self.setVariableValues({
-                'sheet_duration_remaining_excluding_current_mm': this.mm(parseInt(duration_remaining_excluding_current) * 1000, false, false)
-            });
-            self.setVariableValues({
-                'sheet_duration_remaining_excluding_current_ss': this.ss(parseInt(duration_remaining_excluding_current) * 1000, false, false)
-            });
-            self.setVariableValues({
-                'sheet_duration_remaining_excluding_current_seconds': parseInt(duration_remaining_excluding_current)
-            });
-            self.setVariableValues({
+                'sheet_duration_remaining_excluding_current_hhmmss': this.hhmmss(parseInt(duration_remaining_excluding_current) * 1000),
+                'sheet_duration_remaining_excluding_current_hh': this.hh(parseInt(duration_remaining_excluding_current) * 1000, false, false),
+                'sheet_duration_remaining_excluding_current_mm': this.mm(parseInt(duration_remaining_excluding_current) * 1000, false, false),
+                'sheet_duration_remaining_excluding_current_ss': this.ss(parseInt(duration_remaining_excluding_current) * 1000, false, false),
+                'sheet_duration_remaining_excluding_current_seconds': parseInt(duration_remaining_excluding_current),
                 'sheet_duration_remaining_excluding_current_milliseconds': Math.floor(parseInt(duration_remaining_excluding_current) * 1000)
             });
         } else{
             // Default to 0
-            self.setVariableValues({['sheet_duration_remaining_excluding_current_hhmmss']: '00:00:00'});
-            self.setVariableValues({['sheet_duration_remaining_excluding_current_hh']: '00'});
-            self.setVariableValues({['sheet_duration_remaining_excluding_current_mm']: '00'});
-            self.setVariableValues({['sheet_duration_remaining_excluding_current_ss']: '00'});
-            self.setVariableValues({['sheet_duration_remaining_excluding_current_seconds']: 0});
-            self.setVariableValues({['sheet_duration_remaining_excluding_current_milliseconds']: 0});
+            self.setVariableValues({
+                ['sheet_duration_remaining_excluding_current_hhmmss']: '00:00:00',
+                ['sheet_duration_remaining_excluding_current_hh']: '00',
+                ['sheet_duration_remaining_excluding_current_mm']: '00',
+                ['sheet_duration_remaining_excluding_current_ss']: '00',
+                ['sheet_duration_remaining_excluding_current_seconds']: 0,
+                ['sheet_duration_remaining_excluding_current_milliseconds']: 0
+            });
         }
     }
 

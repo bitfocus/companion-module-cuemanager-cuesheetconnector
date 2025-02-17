@@ -568,9 +568,11 @@ module.exports = function (self) {
 	
 	
 	// Set default values to the definitions
+	var default_variable_values = {};
 	variable_definitions.forEach((variable) => {
-		self.setVariableValues({[variable.variableId]: variable._cmDefault});
+		default_variable_values[variable.variableId] = variable._cmDefault;
 	});
+	self.setVariableValues(default_variable_values);
 	
 	
 	// Return all definitions

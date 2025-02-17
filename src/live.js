@@ -245,14 +245,16 @@ module.exports = function (self) {
                     
                     
                     // Generic variables
-                    self.setVariableValues({'tenant_name': Helpers.buttonFriendlyText(data.tenant_name)});
-                    self.setVariableValues({'user_name': Helpers.buttonFriendlyText(data.user_name)});
-                    self.setVariableValues({'project_name': Helpers.buttonFriendlyText(data.updates.sheet.regarding_project_name)});
-                    self.setVariableValues({'sheet_name': Helpers.buttonFriendlyText(data.updates.sheet.name)});
-                    self.setVariableValues({'current_cue_uuid': Helpers.buttonFriendlyText(data.updates.sheet.current_position_row_uuid)});
-                    self.setVariableValues({'current_cue_number': data.updates.sheet.current_position_cue_number});
-                    self.setVariableValues({'current_cue_name': Helpers.buttonFriendlyText(data.updates.sheet.current_position_row_name)});
-                    self.setVariableValues({'next_cue_name': Helpers.buttonFriendlyText(data.updates.sheet.next_position_row_name)});
+                    self.setVariableValues({
+                        'tenant_name': Helpers.buttonFriendlyText(data.tenant_name),
+                        'user_name': Helpers.buttonFriendlyText(data.user_name),
+                        'project_name': Helpers.buttonFriendlyText(data.updates.sheet.regarding_project_name),
+                        'sheet_name': Helpers.buttonFriendlyText(data.updates.sheet.name),
+                        'current_cue_uuid': Helpers.buttonFriendlyText(data.updates.sheet.current_position_row_uuid),
+                        'current_cue_number': data.updates.sheet.current_position_cue_number,
+                        'current_cue_name': Helpers.buttonFriendlyText(data.updates.sheet.current_position_row_name),
+                        'next_cue_name': Helpers.buttonFriendlyText(data.updates.sheet.next_position_row_name)
+                    });
                     
                     
                     
@@ -430,35 +432,40 @@ module.exports = function (self) {
             
             
             // Set companion variables
-            self.setVariableValues({'current_cue_over_under_hhmmss': Helpers.hhmmssOverUnder(cue_over_under_milliseconds, true)});
-            self.setVariableValues({'current_cue_over_under_hh': Helpers.hh(cue_over_under_milliseconds, false, false)});
-            self.setVariableValues({'current_cue_over_under_mm': Helpers.mm(cue_over_under_milliseconds, false, false)});
-            self.setVariableValues({'current_cue_over_under_ss': Helpers.ss(cue_over_under_milliseconds, false, false)});
-            self.setVariableValues({'current_cue_over_under_arrow': Helpers.overUnderArrow(cue_over_under_milliseconds)});
-            self.setVariableValues({'current_cue_over_under_sign': Helpers.overUnderSign(cue_over_under_milliseconds)});
-            self.setVariableValues({'current_cue_over_under_milliseconds': cue_over_under_milliseconds});
-            self.setVariableValues({'current_cue_over_under_seconds': Math.floor(cue_over_under_milliseconds / 1000)});
-            
-            self.setVariableValues({'current_cue_elapsed_hhmmss': Helpers.hhmmssOverUnder(time_elapsed_since_called_milliseconds, true)});
-            self.setVariableValues({'current_cue_elapsed_hh': Helpers.hh(time_elapsed_since_called_milliseconds, false, false)});
-            self.setVariableValues({'current_cue_elapsed_mm': Helpers.mm(time_elapsed_since_called_milliseconds, false, false)});
-            self.setVariableValues({'current_cue_elapsed_ss': Helpers.ss(time_elapsed_since_called_milliseconds, false, false)});
-            self.setVariableValues({'current_cue_elapsed_milliseconds': time_elapsed_since_called_milliseconds});
-            self.setVariableValues({'current_cue_elapsed_seconds': Math.floor(time_elapsed_since_called_milliseconds / 1000)});
+            self.setVariableValues({
+                'current_cue_over_under_hhmmss': Helpers.hhmmssOverUnder(cue_over_under_milliseconds, true),
+                'current_cue_over_under_hh': Helpers.hh(cue_over_under_milliseconds, false, false),
+                'current_cue_over_under_mm': Helpers.mm(cue_over_under_milliseconds, false, false),
+                'current_cue_over_under_ss': Helpers.ss(cue_over_under_milliseconds, false, false),
+                'current_cue_over_under_arrow': Helpers.overUnderArrow(cue_over_under_milliseconds),
+                'current_cue_over_under_sign': Helpers.overUnderSign(cue_over_under_milliseconds),
+                'current_cue_over_under_milliseconds': cue_over_under_milliseconds,
+                'current_cue_over_under_seconds': Math.floor(cue_over_under_milliseconds / 1000),
+                'current_cue_elapsed_hhmmss': Helpers.hhmmssOverUnder(time_elapsed_since_called_milliseconds, true),
+                'current_cue_elapsed_hh': Helpers.hh(time_elapsed_since_called_milliseconds, false, false),
+                'current_cue_elapsed_mm': Helpers.mm(time_elapsed_since_called_milliseconds, false, false),
+                'current_cue_elapsed_ss': Helpers.ss(time_elapsed_since_called_milliseconds, false, false),
+                'current_cue_elapsed_milliseconds': time_elapsed_since_called_milliseconds,
+                'current_cue_elapsed_seconds': Math.floor(time_elapsed_since_called_milliseconds / 1000),
+                'current_cue_remaining_milliseconds': -cue_over_under_milliseconds,
+                'current_cue_remaining_seconds': -Math.floor(cue_over_under_milliseconds / 1000)
+            });
             
             if(cue_over_under_milliseconds <= -1000){
-                self.setVariableValues({'current_cue_remaining_hhmmss': Helpers.hhmmss(Math.abs(cue_over_under_milliseconds))});
-                self.setVariableValues({'current_cue_remaining_hh': Helpers.hh(time_elapsed_since_called_milliseconds, false, false)});
-                self.setVariableValues({'current_cue_remaining_mm': Helpers.mm(time_elapsed_since_called_milliseconds, false, false)});
-                self.setVariableValues({'current_cue_remaining_ss': Helpers.ss(time_elapsed_since_called_milliseconds, false, false)});
+                self.setVariableValues({
+                    'current_cue_remaining_hhmmss': Helpers.hhmmss(Math.abs(cue_over_under_milliseconds)),
+                    'current_cue_remaining_hh': Helpers.hh(time_elapsed_since_called_milliseconds, false, false),
+                    'current_cue_remaining_mm': Helpers.mm(time_elapsed_since_called_milliseconds, false, false),
+                    'current_cue_remaining_ss': Helpers.ss(time_elapsed_since_called_milliseconds, false, false)
+                });
             } else{
-                self.setVariableValues({'current_cue_remaining_hhmmss': '00:00:00'});
-                self.setVariableValues({'current_cue_remaining_hh': '00'});
-                self.setVariableValues({'current_cue_remaining_mm': '00'});
-                self.setVariableValues({'current_cue_remaining_ss': '00'});
+                self.setVariableValues({
+                    'current_cue_remaining_hhmmss': '00:00:00',
+                    'current_cue_remaining_hh': '00',
+                    'current_cue_remaining_mm': '00',
+                    'current_cue_remaining_ss': '00'
+                });
             }
-            self.setVariableValues({'current_cue_remaining_milliseconds': -cue_over_under_milliseconds});
-            self.setVariableValues({'current_cue_remaining_seconds': -Math.floor(cue_over_under_milliseconds / 1000)});
         }
     }
     
@@ -523,14 +530,16 @@ module.exports = function (self) {
                     }
                     
                     // Set over/under companion variables
-                    self.setVariableValues({'sheet_over_under_sign': Helpers.overUnderSign(sheet_over_under_milliseconds)});
-                    self.setVariableValues({'sheet_over_under_arrow': Helpers.overUnderArrow(sheet_over_under_milliseconds)});
-                    self.setVariableValues({'sheet_over_under_hhmmss': Helpers.hhmmssOverUnder(sheet_over_under_milliseconds, 1)});
-                    self.setVariableValues({'sheet_over_under_hh': Helpers.hh(sheet_over_under_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_over_under_mm': Helpers.mm(sheet_over_under_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_over_under_ss': Helpers.ss(sheet_over_under_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_over_under_milliseconds': (sheet_over_under_milliseconds)});
-                    self.setVariableValues({'sheet_over_under_seconds': (Math.floor(sheet_over_under_milliseconds / 1000))});
+                    self.setVariableValues({
+                        'sheet_over_under_sign': Helpers.overUnderSign(sheet_over_under_milliseconds),
+                        'sheet_over_under_arrow': Helpers.overUnderArrow(sheet_over_under_milliseconds),
+                        'sheet_over_under_hhmmss': Helpers.hhmmssOverUnder(sheet_over_under_milliseconds, 1),
+                        'sheet_over_under_hh': Helpers.hh(sheet_over_under_milliseconds, false, false),
+                        'sheet_over_under_mm': Helpers.mm(sheet_over_under_milliseconds, false, false),
+                        'sheet_over_under_ss': Helpers.ss(sheet_over_under_milliseconds, false, false),
+                        'sheet_over_under_milliseconds': (sheet_over_under_milliseconds),
+                        'sheet_over_under_seconds': (Math.floor(sheet_over_under_milliseconds / 1000))
+                    });
                 } else if(now < end_time && target_finish_milliseconds > Clock.localTime(self, self.getVariableValue('clock_utc_unix_milliseconds'))){
                     // NO CUES RUNNING
                     
@@ -544,30 +553,36 @@ module.exports = function (self) {
                     }
                     
                     // Set over/under companion variables
-                    self.setVariableValues({'sheet_over_under_sign': Helpers.overUnderSign(sheet_over_under_milliseconds)});
-                    self.setVariableValues({'sheet_over_under_arrow': Helpers.overUnderArrow(sheet_over_under_milliseconds)});
-                    self.setVariableValues({'sheet_over_under_hhmmss': Helpers.hhmmssOverUnder(sheet_over_under_milliseconds, 1)});
-                    self.setVariableValues({'sheet_over_under_hh': Helpers.hh(sheet_over_under_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_over_under_mm': Helpers.mm(sheet_over_under_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_over_under_ss': Helpers.ss(sheet_over_under_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_over_under_milliseconds': (sheet_over_under_milliseconds)});
-                    self.setVariableValues({'sheet_over_under_seconds': (Math.floor(sheet_over_under_milliseconds / 1000))});
+                    self.setVariableValues({
+                        'sheet_over_under_sign': Helpers.overUnderSign(sheet_over_under_milliseconds),
+                        'sheet_over_under_arrow': Helpers.overUnderArrow(sheet_over_under_milliseconds),
+                        'sheet_over_under_hhmmss': Helpers.hhmmssOverUnder(sheet_over_under_milliseconds, 1),
+                        'sheet_over_under_hh': Helpers.hh(sheet_over_under_milliseconds, false, false),
+                        'sheet_over_under_mm': Helpers.mm(sheet_over_under_milliseconds, false, false),
+                        'sheet_over_under_ss': Helpers.ss(sheet_over_under_milliseconds, false, false),
+                        'sheet_over_under_milliseconds': (sheet_over_under_milliseconds),
+                        'sheet_over_under_seconds': (Math.floor(sheet_over_under_milliseconds / 1000))
+                    });
                 } else{
                     // NO CUES RUNNING - Sheet's target end time has passed. Default companion variables.
                     
-                    self.setVariableValues({'sheet_over_under_sign': '-'});
-                    self.setVariableValues({'sheet_over_under_arrow': '▼'});
-                    self.setVariableValues({'sheet_over_under_hhmmss': '▼00:00:00'});
-                    self.setVariableValues({'sheet_over_under_hh': '00'});
-                    self.setVariableValues({'sheet_over_under_mm': '00'});
-                    self.setVariableValues({'sheet_over_under_ss': '00'});
-                    self.setVariableValues({'sheet_over_under_milliseconds': '0'});
-                    self.setVariableValues({'sheet_over_under_seconds': '0'});
+                    self.setVariableValues({
+                        'sheet_over_under_sign': '-',
+                        'sheet_over_under_arrow': '▼',
+                        'sheet_over_under_hhmmss': '▼00:00:00',
+                        'sheet_over_under_hh': '00',
+                        'sheet_over_under_mm': '00',
+                        'sheet_over_under_ss': '00',
+                        'sheet_over_under_milliseconds': '0',
+                        'sheet_over_under_seconds': '0'
+                    });
                 }
                 
                 // Set the projected finish variables
-                self.setVariableValues({'sheet_projected_finish': Helpers.hhmmss(projected_finish_milliseconds)});
-                self.setVariableValues({'sheet_projected_finish_12hr': Helpers.hhmmss12Hour(projected_finish_milliseconds)});
+                self.setVariableValues({
+                    'sheet_projected_finish': Helpers.hhmmss(projected_finish_milliseconds),
+                    'sheet_projected_finish_12hr': Helpers.hhmmss12Hour(projected_finish_milliseconds)
+                });
                 
                 
                 // Set variables for total time remaining
@@ -587,19 +602,23 @@ module.exports = function (self) {
                         var total_remaining_seconds = (total_remaining_milliseconds / 1000);
                     }
                 
-                    self.setVariableValues({'sheet_duration_remaining_hhmmss': Helpers.hhmmss(total_remaining_milliseconds)});
-                    self.setVariableValues({'sheet_duration_remaining_hh': Helpers.hh(total_remaining_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_duration_remaining_mm': Helpers.mm(total_remaining_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_duration_remaining_ss': Helpers.ss(total_remaining_milliseconds, false, false)});
-                    self.setVariableValues({'sheet_duration_remaining_seconds': total_remaining_seconds});
-                    self.setVariableValues({'sheet_duration_remaining_milliseconds': total_remaining_milliseconds});
+                    self.setVariableValues({
+                        'sheet_duration_remaining_hhmmss': Helpers.hhmmss(total_remaining_milliseconds),
+                        'sheet_duration_remaining_hh': Helpers.hh(total_remaining_milliseconds, false, false),
+                        'sheet_duration_remaining_mm': Helpers.mm(total_remaining_milliseconds, false, false),
+                        'sheet_duration_remaining_ss': Helpers.ss(total_remaining_milliseconds, false, false),
+                        'sheet_duration_remaining_seconds': total_remaining_seconds,
+                        'sheet_duration_remaining_milliseconds': total_remaining_milliseconds
+                    });
                 } else{
-                    self.setVariableValues({'sheet_duration_remaining_hhmmss': '00:00:00'});
-                    self.setVariableValues({'sheet_duration_remaining_hh': '00'});
-                    self.setVariableValues({'sheet_duration_remaining_mm': '00'});
-                    self.setVariableValues({'sheet_duration_remaining_ss': '00'});
-                    self.setVariableValues({'sheet_duration_remaining_seconds': 0});
-                    self.setVariableValues({'sheet_duration_remaining_milliseconds': 0});
+                    self.setVariableValues({
+                        'sheet_duration_remaining_hhmmss': '00:00:00',
+                        'sheet_duration_remaining_hh': '00',
+                        'sheet_duration_remaining_mm': '00',
+                        'sheet_duration_remaining_ss': '00',
+                        'sheet_duration_remaining_seconds': 0,
+                        'sheet_duration_remaining_milliseconds': 0
+                    });
                 }
                 
                 // Set countdown to start
@@ -607,32 +626,38 @@ module.exports = function (self) {
                 var sheet_countdown_to_start_milliseconds = start_time - now;
                     
                 if(now < end_time && now < start_time && Helpers.empty(self.getVariableValue('current_cue_uuid'))){
-                    self.setVariableValues({'sheet_countdown_to_start_hhmmss': Helpers.hhmmssOverUnder(-Math.abs(sheet_countdown_to_start_milliseconds), true)});
-                    self.setVariableValues({'sheet_countdown_to_start_hh': Helpers.hh(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
-                    self.setVariableValues({'sheet_countdown_to_start_mm': Helpers.mm(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
-                    self.setVariableValues({'sheet_countdown_to_start_ss': Helpers.ss(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
-                    self.setVariableValues({'sheet_countdown_to_start_milliseconds': -Math.abs(sheet_countdown_to_start_milliseconds)});
-                    self.setVariableValues({'sheet_countdown_to_start_seconds': -Math.floor(Math.abs(sheet_countdown_to_start_milliseconds / 1000))});
-                    self.setVariableValues({'sheet_countdown_to_start_sign': '-'});
-                    self.setVariableValues({'sheet_countdown_to_start_arrow': '▼'});
+                    self.setVariableValues({
+                        'sheet_countdown_to_start_hhmmss': Helpers.hhmmssOverUnder(-Math.abs(sheet_countdown_to_start_milliseconds), true),
+                        'sheet_countdown_to_start_hh': Helpers.hh(Math.abs(sheet_countdown_to_start_milliseconds), false, false),
+                        'sheet_countdown_to_start_mm': Helpers.mm(Math.abs(sheet_countdown_to_start_milliseconds), false, false),
+                        'sheet_countdown_to_start_ss': Helpers.ss(Math.abs(sheet_countdown_to_start_milliseconds), false, false),
+                        'sheet_countdown_to_start_milliseconds': -Math.abs(sheet_countdown_to_start_milliseconds),
+                        'sheet_countdown_to_start_seconds': -Math.floor(Math.abs(sheet_countdown_to_start_milliseconds / 1000)),
+                        'sheet_countdown_to_start_sign': '-',
+                        'sheet_countdown_to_start_arrow': '▼'
+                    });
                 } else if(now < end_time && Helpers.empty(self.getVariableValue('current_cue_uuid'))){
-                    self.setVariableValues({'sheet_countdown_to_start_hhmmss': Helpers.hhmmssOverUnder(Math.abs(sheet_countdown_to_start_milliseconds), true)});
-                    self.setVariableValues({'sheet_countdown_to_start_hh': Helpers.hh(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
-                    self.setVariableValues({'sheet_countdown_to_start_mm': Helpers.mm(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
-                    self.setVariableValues({'sheet_countdown_to_start_ss': Helpers.ss(Math.abs(sheet_countdown_to_start_milliseconds), false, false)});
-                    self.setVariableValues({'sheet_countdown_to_start_milliseconds': Math.abs(sheet_countdown_to_start_milliseconds)});
-                    self.setVariableValues({'sheet_countdown_to_start_seconds': Math.floor(Math.abs(sheet_countdown_to_start_milliseconds / 1000))});
-                    self.setVariableValues({'sheet_countdown_to_start_sign': '+'});
-                    self.setVariableValues({'sheet_countdown_to_start_arrow': '▲'});
+                    self.setVariableValues({
+                        'sheet_countdown_to_start_hhmmss': Helpers.hhmmssOverUnder(Math.abs(sheet_countdown_to_start_milliseconds), true),
+                        'sheet_countdown_to_start_hh': Helpers.hh(Math.abs(sheet_countdown_to_start_milliseconds), false, false),
+                        'sheet_countdown_to_start_mm': Helpers.mm(Math.abs(sheet_countdown_to_start_milliseconds), false, false),
+                        'sheet_countdown_to_start_ss': Helpers.ss(Math.abs(sheet_countdown_to_start_milliseconds), false, false),
+                        'sheet_countdown_to_start_milliseconds': Math.abs(sheet_countdown_to_start_milliseconds),
+                        'sheet_countdown_to_start_seconds': Math.floor(Math.abs(sheet_countdown_to_start_milliseconds / 1000)),
+                        'sheet_countdown_to_start_sign': '+',
+                        'sheet_countdown_to_start_arrow': '▲'
+                    });
                 } else{
-                    self.setVariableValues({'sheet_countdown_to_start_hhmmss': '00:00:00'});
-                    self.setVariableValues({'sheet_countdown_to_start_hh': '00'});
-                    self.setVariableValues({'sheet_countdown_to_start_mm': '00'});
-                    self.setVariableValues({'sheet_countdown_to_start_ss': '00'});
-                    self.setVariableValues({'sheet_countdown_to_start_milliseconds': 0});
-                    self.setVariableValues({'sheet_countdown_to_start_seconds': 0});
-                    self.setVariableValues({'sheet_countdown_to_start_sign': '-'});
-                    self.setVariableValues({'sheet_countdown_to_start_arrow': '▼'});
+                    self.setVariableValues({
+                        'sheet_countdown_to_start_hhmmss': '00:00:00',
+                        'sheet_countdown_to_start_hh': '00',
+                        'sheet_countdown_to_start_mm': '00',
+                        'sheet_countdown_to_start_ss': '00',
+                        'sheet_countdown_to_start_milliseconds': 0,
+                        'sheet_countdown_to_start_seconds': 0,
+                        'sheet_countdown_to_start_sign': '-',
+                        'sheet_countdown_to_start_arrow': '▼'
+                    });
                 }
             } else{
                 // No sheet is currently selected. Reset variables.

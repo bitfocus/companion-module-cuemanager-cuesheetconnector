@@ -7,16 +7,16 @@ class Clock{
         // Update clock times
         setInterval(() =>{
             if(self.getVariableValue('clock_sync_initialized') == '1'){
-                self.setVariableValues({'clock_utc_unix_milliseconds': this.utcTime(self, null)});
-                self.setVariableValues({'clock_utc_unix_seconds': Math.floor(this.utcTime(self, null) / 1000)});
-                self.setVariableValues({'clock_local_unix_milliseconds': this.localTime(self, null)});
-                self.setVariableValues({'clock_local_unix_seconds': Math.floor(this.localTime(self, null) / 1000)});
-                
-                self.setVariableValues({'clock_utc_hhmmss': Helpers.hhmmss(this.utcTime(self, null))});
-                self.setVariableValues({'clock_local_hhmmss': Helpers.hhmmss(this.localTime(self, null))});
-                
-                self.setVariableValues({'clock_utc_hhmmss_12hr': Helpers.hhmmss12Hour(this.utcTime(self, null))});
-                self.setVariableValues({'clock_local_hhmmss_12hr': Helpers.hhmmss12Hour(this.localTime(self, null))});
+                self.setVariableValues({
+                    'clock_utc_unix_milliseconds': this.utcTime(self, null),
+                    'clock_utc_unix_seconds': Math.floor(this.utcTime(self, null) / 1000),
+                    'clock_local_unix_milliseconds': this.localTime(self, null),
+                    'clock_local_unix_seconds': Math.floor(this.localTime(self, null) / 1000),
+                    'clock_utc_hhmmss': Helpers.hhmmss(this.utcTime(self, null)),
+                    'clock_local_hhmmss': Helpers.hhmmss(this.localTime(self, null)),
+                    'clock_utc_hhmmss_12hr': Helpers.hhmmss12Hour(this.utcTime(self, null)),
+                    'clock_local_hhmmss_12hr': Helpers.hhmmss12Hour(this.localTime(self, null))
+                });
                 
                 if(self.getVariableValue('clock_sync_initialized') != '1'){
                     Helpers.updateStatus(self, 'connecting', 'Initializing clock...');
@@ -193,45 +193,55 @@ class Clock{
                                 var old_clock_sync_offset = parseInt(self.getVariableValue('device_time_offset_milliseconds'));
                                 if(old_clock_sync_offset == 0 || Math.abs(old_clock_sync_offset - clock_sync_offset) > 100){
                                     
+                                    // Determine clock sync is initialized
+                                    var clock_sync_initialized = '0';
                                     if(self.getVariableValue('clock_sync_initialized') == '0'){
-                                        self.setVariableValues({'clock_sync_initialized': '1'});
+                                        clock_sync_initialized = '1';
                                         Helpers.updateStatus(self, 'ok');
                                     }
                                     
                                     
-                                    // Set device sync status
+                                    // Determine device sync status
                                     var device_time_sync_status = 'OK';
                                     if(clock_sync_offset > 1500){
                                         device_time_sync_status = 'Fast';
                                     } else if(clock_sync_offset < -1500){
                                         device_time_sync_status = 'Slow';
                                     }
-                                    self.setVariableValues({ 'device_time_sync_status': device_time_sync_status});
                                     
-                                    // Set device offset variables
-                                    self.setVariableValues({ 'device_time_offset_milliseconds': clock_sync_offset });
-                                    self.setVariableValues({ 'device_time_offset_seconds': Math.floor(clock_sync_offset / 1000) });
-                                    self.setVariableValues({ 'device_time_offset_human': this.formatMilliseconds(clock_sync_offset)});
+                                    // Determine device timezone variables
+                                    const deviceTzOffset = new Date().getTimezoneOffset();
+                                    const deviceTzOffsetInMilliseconds = (deviceTzOffset * 60) * 1000;
+                                    const deviceTzOffsetSign = deviceTzOffsetInMilliseconds > 0 ? '-' : '+';
+
+                                    
+                                    // Set device clock sync, offset, and timezone variables
+                                    self.setVariableValues({
+                                        'clock_sync_initialized': clock_sync_initialized,
+                                        'device_time_sync_status': device_time_sync_status,
+                                        'device_time_offset_milliseconds': clock_sync_offset,
+                                        'device_time_offset_seconds': Math.floor(clock_sync_offset / 1000),
+                                        'device_time_offset_human': this.formatMilliseconds(clock_sync_offset),
+                                        'device_timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+                                        'device_timezone_city': Intl.DateTimeFormat().resolvedOptions().timeZone.split('/')[1],
+                                        'device_timezone_offset_milliseconds': deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds),
+                                        'device_timezone_offset_seconds': deviceTzOffsetSign+Math.abs(Math.floor(deviceTzOffsetInMilliseconds / 1000))
+                                    });
+                                    
                                     if(clock_sync_offset < 0){
-                                        self.setVariableValues({ 'device_time_adjusted_milliseconds': -clock_sync_offset });
-                                        self.setVariableValues({ 'device_time_adjusted_human': this.formatMilliseconds(clock_sync_offset, true)});
+                                        self.setVariableValues({
+                                            'device_time_adjusted_milliseconds': -clock_sync_offset,
+                                            'device_time_adjusted_human': this.formatMilliseconds(clock_sync_offset, true)
+                                        });
                                     } else{
-                                        self.setVariableValues({ 'device_time_adjusted_milliseconds': '+'+clock_sync_offset });
-                                        self.setVariableValues({ 'device_time_adjusted_human': this.formatMilliseconds(clock_sync_offset, true)});
+                                        self.setVariableValues({
+                                            'device_time_adjusted_milliseconds': '+'+clock_sync_offset,
+                                            'device_time_adjusted_human': this.formatMilliseconds(clock_sync_offset, true)
+                                        });
                                     }
                                     
                                     self.log('debug', '[Clock] Device time sync is '+device_time_sync_status);
                                     self.log('debug', '[Clock] Device time offset is '+clock_sync_offset);
-                                    
-                                    // Set device timezone variables
-                                    const deviceTzOffset = new Date().getTimezoneOffset();
-                                    const deviceTzOffsetInMilliseconds = (deviceTzOffset * 60) * 1000;
-                                    const deviceTzOffsetSign = deviceTzOffsetInMilliseconds > 0 ? '-' : '+';
-                                    self.setVariableValues({'device_timezone': Intl.DateTimeFormat().resolvedOptions().timeZone});
-                                    self.setVariableValues({'device_timezone_city': Intl.DateTimeFormat().resolvedOptions().timeZone.split('/')[1]});
-                                    self.setVariableValues({'device_timezone_offset_milliseconds': deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds)});
-                                    self.setVariableValues({'device_timezone_offset_seconds': deviceTzOffsetSign+Math.abs(Math.floor(deviceTzOffsetInMilliseconds / 1000))});
-                                    
                                     self.log('debug', '[Clock] Device timezone is '+Intl.DateTimeFormat().resolvedOptions().timeZone);
                                     self.log('debug', '[Clock] Device timezone offset is '+deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds)+'ms');
                                     
