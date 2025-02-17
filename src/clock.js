@@ -192,15 +192,7 @@ class Clock{
                                 // Only update if change is meaningful. We don't want the clock jumping around.
                                 var old_clock_sync_offset = parseInt(self.getVariableValue('device_time_offset_milliseconds'));
                                 if(old_clock_sync_offset == 0 || Math.abs(old_clock_sync_offset - clock_sync_offset) > 100){
-                                    
-                                    // Determine clock sync is initialized
-                                    var clock_sync_initialized = '0';
-                                    if(self.getVariableValue('clock_sync_initialized') == '0'){
-                                        clock_sync_initialized = '1';
-                                        Helpers.updateStatus(self, 'ok');
-                                    }
-                                    
-                                    
+
                                     // Determine device sync status
                                     var device_time_sync_status = 'OK';
                                     if(clock_sync_offset > 1500){
@@ -209,15 +201,14 @@ class Clock{
                                         device_time_sync_status = 'Slow';
                                     }
                                     
-                                    // Determine device timezone variables
+                                    // Determine device timezone offset
                                     const deviceTzOffset = new Date().getTimezoneOffset();
                                     const deviceTzOffsetInMilliseconds = (deviceTzOffset * 60) * 1000;
                                     const deviceTzOffsetSign = deviceTzOffsetInMilliseconds > 0 ? '-' : '+';
-
                                     
-                                    // Set device clock sync, offset, and timezone variables
+                                    
+                                    // Set Time sync related variables
                                     self.setVariableValues({
-                                        'clock_sync_initialized': clock_sync_initialized,
                                         'device_time_sync_status': device_time_sync_status,
                                         'device_time_offset_milliseconds': clock_sync_offset,
                                         'device_time_offset_seconds': Math.floor(clock_sync_offset / 1000),
@@ -227,7 +218,6 @@ class Clock{
                                         'device_timezone_offset_milliseconds': deviceTzOffsetSign+Math.abs(deviceTzOffsetInMilliseconds),
                                         'device_timezone_offset_seconds': deviceTzOffsetSign+Math.abs(Math.floor(deviceTzOffsetInMilliseconds / 1000))
                                     });
-                                    
                                     if(clock_sync_offset < 0){
                                         self.setVariableValues({
                                             'device_time_adjusted_milliseconds': -clock_sync_offset,
@@ -238,6 +228,12 @@ class Clock{
                                             'device_time_adjusted_milliseconds': '+'+clock_sync_offset,
                                             'device_time_adjusted_human': this.formatMilliseconds(clock_sync_offset, true)
                                         });
+                                    }
+                                    
+                                    // Only set this if not initialized yet
+                                    if(self.getVariableValue('clock_sync_initialized') == '0'){
+                                        self.setVariableValues({'clock_sync_initialized': '1'});
+                                        Helpers.updateStatus(self, 'ok');
                                     }
                                     
                                     self.log('debug', '[Clock] Device time sync is '+device_time_sync_status);
