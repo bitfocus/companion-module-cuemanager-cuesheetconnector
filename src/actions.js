@@ -80,24 +80,26 @@ class Actions{
 		if(Helpers.empty(Globals.actionLastPressTimes, actionId)){
 			Globals.actionLastPressTimes[actionId] = 0;
 		}
-		var currentTime = parseInt(self.getVariableValue('clock_utc_unix_milliseconds'));
+		
+		var currentTime = parseInt(Globals.trueClock.utc.milliseconds);
 		var lastTime = Globals.actionLastPressTimes[actionId];
-		console.log(Globals);
+		
 		if(currentTime - lastTime > throttleDelay){
 			Globals.actionLastPressTimes[actionId] = currentTime;
 			return false; // Not throttled
 		}
+		
 		return true; // Throttled
 	}
 
 	getActionThrottleDelay(action){
 		const delays = {
-			go_to_prev_cue: 500,
-			go_to_next_cue: 500,
+			go_to_prev_cue: 750,
+			go_to_next_cue: 750,
 			clear_position: 1000,
 			get_current_position: 1000,
 			sync_clock_to_cue_manager: 500,
-			adjust_duration: 500
+			adjust_duration: 750
 		};
 		return delays.hasOwnProperty(action) ? delays[action] : 500;
 	}
