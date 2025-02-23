@@ -11,7 +11,6 @@ module.exports = function (self) {
     // Global variables used/updated in functions
     var checking_live_service_active;
     var try_first_call_interval;
-    var current_position;
     var live_service_first_called;
     var live_service_last_5xx_error;
     var live_updated_after;
@@ -23,7 +22,6 @@ module.exports = function (self) {
     function init_module_global_variables(){
         checking_live_service_active = false;
         try_first_call_interval;
-        current_position = {};
         live_service_first_called = false;
         live_service_last_5xx_error = 0;
         live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
@@ -59,7 +57,7 @@ module.exports = function (self) {
         clearInterval(try_first_call_interval);
         
         if(!Helpers.empty(self, 'config', 'personal_access_token')){
-            if(!Helpers.empty(current_position, 'sheet', 'uuid')){ // Only call live service if there is a sheet connected
+            if(!Helpers.empty(self.getVariableValue('sheet_uuid'))){ // Only call live service if there is a sheet connected
                 
                 self.log('debug', '[Live] Live service connection opened.');
                 
@@ -79,7 +77,7 @@ module.exports = function (self) {
                     }
                 };
             
-                var url = Helpers.trim(self.config.live_service_base_endpoint, '/')+'/'+current_position.sheet.uuid;
+                var url = Helpers.trim(self.config.live_service_base_endpoint, '/')+'/'+self.getVariableValue('sheet_uuid');
                 url += '?updated_after='+live_updated_after+'&btab_id='+'companion_'+Constants.SESSION_TOKEN;
                 url += '&accept=application%2Fjson&include[]=next_position&include[]=duration_totals&include[]=cue_number';
                 if(Helpers.configHasCellTextColumns(self.config) && self.config.store_cue_cell_text_as_variables_enabled){
@@ -206,7 +204,7 @@ module.exports = function (self) {
     
     
     function receiveLiveServiceData(self, data){
-        if(!Helpers.empty(current_position, 'sheet', 'uuid')){
+        if(!Helpers.empty(self.getVariableValue('sheet_uuid'))){
             
             //  Update live_updated_after and call live service
             if(!Helpers.empty(data, 'updates', 'query_timestamp')){
@@ -345,7 +343,7 @@ module.exports = function (self) {
     
     
     function checkLiveServiceCallActive(self){
-        if(!Helpers.empty(current_position, 'sheet', 'uuid')){
+        if(!Helpers.empty(self.getVariableValue('sheet_uuid'))){
             if(checking_live_service_active == false){
                 // VARIABLE(S) USED IN OTHER FUNCTIONS
                 checking_live_service_active = true;
@@ -723,14 +721,14 @@ module.exports = function (self) {
                         if (responseData != null && responseData !== '' && responseData !== undefined) {
                             try {
                                 jsonData = JSON.parse(responseData);
-                                
-                                
-                                // VARIABLE(S) USED IN OTHER FUNCTIONS
-                                // Set this data as the global current position object
-                                current_position = jsonData;
 
                                 
                                 if(res.status == 200){
+                                    // Sheet uuid
+                                    if(Helpers.isset(jsonData, 'sheet', 'uuid')){
+                                        self.setVariableValues({'sheet_uuid': jsonData.sheet.uuid});
+                                    }
+                                    
                                     // Current position uuid
                                     if(Helpers.isset(jsonData, 'current_position', 'regarding_row_name')){
                                         self.setVariableValues({ 'current_cue_uuid': Helpers.buttonFriendlyText(jsonData.current_position.current_row_uuid) });
@@ -872,7 +870,7 @@ module.exports = function (self) {
                             }
                             
                             // Clear cue manager variables if no sheet connected.
-                            if(Helpers.empty(current_position, 'sheet')){
+                            if(Helpers.empty(jsonData, 'sheet')){
                                 
                                 clearCurrentCueOverUnder();
                                 
@@ -921,7 +919,7 @@ module.exports = function (self) {
                 checkLiveServiceCallActive(self);
                 
                 // If sheet was disconnected then reconnected, call CM API to get position
-                if(Helpers.empty(current_position, 'sheet')){
+                if(Helpers.empty(self.getVariableValue('sheet_uuid'))){
                     callCueManagerCompanionService(self, 'GET', 'current_position');
                 }
             }
@@ -951,7 +949,7 @@ module.exports = function (self) {
         try_first_call_interval = setInterval(function(self) {
             // Call live service for the first time.
             if(self.getVariableValue('clock_sync_initialized') == '1'){
-                if(!Helpers.empty(current_position, 'sheet', 'uuid') && Helpers.isset(self, 'config')){
+                if(!Helpers.empty(self.getVariableValue('sheet_uuid')) && Helpers.isset(self, 'config')){
                     if(live_service_first_called == false){
                         if(Helpers.validateCMSettings(self.config) === 'OK') {
                             // Set live_updated_after with current time (Offset may change);

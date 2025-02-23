@@ -116,6 +116,11 @@ module.exports = function (self) {
 			_cmDefault: 'Project Name'
 		},
 		{
+			variableId: 'sheet_uuid',
+			name: 'The uuid of the current cue sheet.',
+			_cmDefault: ''
+		},
+		{
 			variableId: 'sheet_name',
 			name: 'The name of the current cue sheet.',
 			_cmDefault: 'Sheet Name'

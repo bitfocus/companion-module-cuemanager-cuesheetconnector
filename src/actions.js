@@ -154,6 +154,10 @@ function callCueManagerCompanionService(self, method, endpoint, jsonData){
 							jsonData = JSON.parse(responseData);
 
 							if(status_code == 200){
+								// Sheet uuid
+								if(Helpers.isset(jsonData, 'sheet', 'uuid')){
+									self.setVariableValues({'sheet_uuid': jsonData.sheet.uuid});
+								}
 								
 								// Position variables
 								if(Helpers.isset(jsonData, 'current_position', '_cue_number')){
