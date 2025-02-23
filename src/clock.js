@@ -8,6 +8,11 @@ class Clock{
         // Update clock times
         setInterval(() =>{
             if(self.getVariableValue('clock_sync_initialized') == '1'){
+                Globals.trueClock.utc.milliseconds = this.utcTime(self, null, true);
+                Globals.trueClock.utc.seconds = Math.floor(this.utcTime(self, null) / 1000);
+                Globals.trueClock.local.milliseconds = this.localTime(self, null, true);
+                Globals.trueClock.local.seconds = Math.floor(this.localTime(self, null) / 1000);
+                
                 self.setVariableValues({
                     'clock_utc_unix_milliseconds': this.utcTime(self, null),
                     'clock_utc_unix_seconds': Math.floor(this.utcTime(self, null) / 1000),
@@ -32,7 +37,7 @@ class Clock{
         }, 60000);
     }
 
-    utcTime(self, local_time_milliseconds){
+    utcTime(self, local_time_milliseconds, millisecond_accuracy){
         // Use current UTC time or pass a local time in.
         
         /*
@@ -42,8 +47,10 @@ class Clock{
             2.) The beginning of the current second is what the UI's clock uses, so match that here by using Math.floor.
         */
         
-        if(Helpers.empty(local_time_milliseconds)){
+        if(Helpers.empty(local_time_milliseconds) && millisecond_accuracy !== true){
             var now = Math.floor(Date.now() / 1000) * 1000;
+        } else if(Helpers.empty(local_time_milliseconds) && millisecond_accuracy === true){
+            var now = Date.now();
         } else{
             var now = Math.floor(parseInt(local_time_milliseconds) / 1000) * 1000;
             
@@ -75,7 +82,7 @@ class Clock{
         return now;
     }
     
-    localTime(self, utc_time_milliseconds){
+    localTime(self, utc_time_milliseconds, millisecond_accuracy){
         // Use current UTC time or pass a UTC time in.
         
         /*
@@ -85,8 +92,10 @@ class Clock{
             2.) The beginning of the current second is what the UI's clock uses, so match that here by using Math.floor.
         */
        
-        if(Helpers.empty(utc_time_milliseconds)){
+        if(Helpers.empty(utc_time_milliseconds) && millisecond_accuracy !== true){
             var now = Math.floor(Date.now() / 1000) * 1000;
+        } else if(Helpers.empty(utc_time_milliseconds) && millisecond_accuracy === true){
+            var now = Date.now();
         } else{
             var now =  Math.floor(parseInt(utc_time_milliseconds) / 1000) * 1000;
         }
