@@ -121,6 +121,16 @@ module.exports = function (self) {
 			_cmDefault: 'Sheet Name'
 		},
 		{
+			variableId: 'sheet_starts_at',
+			name: 'The the start time of the current sheet.',
+			_cmDefault: ''
+		},
+		{
+			variableId: 'sheet_ends_at',
+			name: 'The the end time of the current sheet.',
+			_cmDefault: ''
+		},
+		{
 			variableId: 'sheet_total_runtime_hhmmss',
 			name: 'The total runtime of the current sheet in HH:MM:SS.',
 			_cmDefault: '00:00:00'
@@ -303,6 +313,16 @@ module.exports = function (self) {
 		{
 			variableId: 'current_cue_uuid',
 			name: 'The uuid of the current cue sheet.',
+			_cmDefault: ''
+		},
+		{
+			variableId: 'current_cue_position_created_at',
+			name: 'The time when the current cue position was created.',
+			_cmDefault: ''
+		},
+		{
+			variableId: 'current_cue_position_updated_at',
+			name: 'The time when the current cue position was updated.',
 			_cmDefault: ''
 		},
 		{

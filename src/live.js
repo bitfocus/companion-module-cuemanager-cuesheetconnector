@@ -19,10 +19,6 @@ module.exports = function (self) {
     var live_service_call_status_time;
     var live_service_call_retries;
     var live_service_unauthorized;
-    var live_sheet_starts_at;
-    var live_sheet_ends_at;
-    var live_current_cue_created_at;
-    var live_current_cue_updated_at;
     
     function init_module_global_variables(){
         checking_live_service_active = false;
@@ -35,10 +31,6 @@ module.exports = function (self) {
         live_service_call_status_time = self.getVariableValue('clock_utc_unix_seconds');
         live_service_call_retries = 0;
         live_service_unauthorized = false;
-        live_sheet_starts_at = '';
-        live_sheet_ends_at = '';
-        live_current_cue_created_at = '';
-        live_current_cue_updated_at = '';
     }
     
     init_module_global_variables();
@@ -289,8 +281,10 @@ module.exports = function (self) {
                     
                     
                     // VARIABLE(S) USED IN OTHER FUNCTIONS
-                    live_sheet_starts_at = data.updates.sheet.starts_at;
-                    live_sheet_ends_at = data.updates.sheet.ends_at;
+                    self.setVariableValues({
+                        'sheet_starts_at': data.updates.sheet.starts_at,
+                        'sheet_ends_at': data.updates.sheet.ends_at
+                    });
                     
                     
                     // Name of a followed user (if followed)
@@ -305,12 +299,16 @@ module.exports = function (self) {
                     var duration_offset = '0';
                     if(!Helpers.empty(data, 'updates', 'sheet', 'my_position_duration_offset')){
                         duration_offset = data.updates.sheet.my_position_duration_offset;
-                        live_current_cue_created_at = data.updates.sheet.my_position_created_at;
-                        live_current_cue_updated_at = data.updates.sheet.my_position_updated_at;
+                        self.setVariableValues({
+                            'current_cue_position_created_at': data.updates.sheet.my_position_created_at,
+                            'current_cue_position_updated_at': data.updates.sheet.my_position_updated_at
+                        });
                     } else if(!Helpers.empty(data, 'updates', 'sheet', 'sheet_caller_position_duration_offset')){
                         duration_offset = data.updates.sheet.sheet_caller_position_duration_offset;
-                        live_current_cue_created_at = data.updates.sheet.sheet_caller_position_created_at;
-                        live_current_cue_updated_at = data.updates.sheet.sheet_caller_position_updated_at;
+                        self.setVariableValues({
+                            'current_cue_position_created_at': data.updates.sheet.sheet_caller_position_created_at,
+                            'current_cue_position_updated_at': data.updates.sheet.sheet_caller_position_updated_at
+                        });
                     }
                     
                     
@@ -391,8 +389,10 @@ module.exports = function (self) {
     
     function clearCurrentCueOverUnder(){
         // Reset function variables
-        live_current_cue_created_at = '';
-        live_current_cue_updated_at = '';
+        self.setVariableValues({
+            'current_cue_position_created_at': '',
+            'current_cue_position_updated_at': ''
+        });
         
         Helpers.setCueDurations(self, 'current_cue', 0, 0);
         
@@ -403,10 +403,11 @@ module.exports = function (self) {
         ]);
     }
     
-    function setCurrentCueOverUnder(updated_at){
+    function setCurrentCueOverUnder(){
         
         var duration = self.getVariableValue('current_cue_duration_seconds');
         var offset = self.getVariableValue('current_cue_duration_offset_seconds');
+        var updated_at = self.getVariableValue('current_cue_position_updated_at');
         
         if((!Helpers.empty(duration) || duration == '0') &&!Helpers.empty(updated_at) && !isNaN(duration)){
             
@@ -469,11 +470,15 @@ module.exports = function (self) {
         }
     }
     
-    function setSheetOverUnder(sheet_starts_at, sheet_ends_at, current_cue_created_at, current_cue_updated_at){
+    function setSheetOverUnder(){
         var current_cue_duration =  self.getVariableValue('current_cue_duration_seconds');
         var current_cue_offset = self.getVariableValue('current_cue_duration_offset_seconds');
         var duration_total =  self.getVariableValue('sheet_total_runtime_seconds');
         var duration_remaining = self.getVariableValue('sheet_duration_remaining_excluding_current_seconds');
+        var current_cue_created_at = self.getVariableValue('current_cue_position_created_at');
+        var current_cue_updated_at = self.getVariableValue('current_cue_position_updated_at');
+        var sheet_starts_at = self.getVariableValue('sheet_starts_at');
+        var sheet_ends_at = self.getVariableValue('sheet_ends_at');
         
         if((!Helpers.empty(duration_total) || duration_total == '0') && !isNaN(duration_total)){
             // Calculate milliseconds
@@ -821,11 +826,15 @@ module.exports = function (self) {
                                     
                                     // VARIABLE(S) USED IN OTHER FUNCTIONS
                                     // Cue duration, offset, & over/under
-                                    live_sheet_starts_at = jsonData.sheet.starts_at;
-                                    live_sheet_ends_at = jsonData.sheet.ends_at;
+                                    self.setVariableValues({
+                                        'sheet_starts_at': jsonData.sheet.starts_at,
+                                        'sheet_ends_at': jsonData.sheet.ends_at
+                                    });
                                     if(!Helpers.empty(jsonData, 'current_position')){
-                                        live_current_cue_created_at = jsonData.current_position.created_at;
-                                        live_current_cue_updated_at = jsonData.current_position.updated_at;
+                                        self.setVariableValues({
+                                            'current_cue_position_created_at': jsonData.current_position.created_at,
+                                            'current_cue_position_updated_at': jsonData.current_position.updated_at
+                                        });
                                     }
                                     
                                     
@@ -932,13 +941,8 @@ module.exports = function (self) {
         // Cue sheet timers
         setInterval(() => {
             if(self.getVariableValue('clock_sync_initialized') == '1'){
-                setCurrentCueOverUnder(live_current_cue_updated_at);
-                setSheetOverUnder(
-                    live_sheet_starts_at,
-                    live_sheet_ends_at,
-                    live_current_cue_created_at,
-                    live_current_cue_updated_at
-                );
+                setCurrentCueOverUnder();
+                setSheetOverUnder();
                 self.checkFeedbacks('change_button_style_on_conditional');
             }
         }, 100);
