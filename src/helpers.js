@@ -367,6 +367,22 @@ class Helpers{
             });
         }
     }
+    
+    clearCurrentCueOverUnder(self){
+        // Reset function variables
+        self.setVariableValues({
+            'current_cue_position_created_at': '',
+            'current_cue_position_updated_at': ''
+        });
+        
+        this.setCueDurations(self, 'current_cue', 0, 0);
+        
+        // Reset companion variables
+        this.resetVariables(self, [
+            'current_cue_',
+            'next_cue_'
+        ]);
+    }
 
     hhmmssOverUnder(unixMilliseconds, use_plus_sign = false, use_minus_sign = true) {
         // Ensure the input only uses whole seconds (top of the second)

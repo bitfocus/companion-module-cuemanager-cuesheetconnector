@@ -1,4 +1,5 @@
 const Helpers = require('./helpers');
+const Globals = require('./globals');
 
 class Clock{
     initClock(self){

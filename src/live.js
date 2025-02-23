@@ -1,5 +1,7 @@
 const Constants = require('./constants');
 const Helpers = require('./helpers');
+const Globals = require('./globals');
+const Actions = require('./actions');
 const Clock = require('./clock');
 
 
@@ -143,7 +145,7 @@ module.exports = function (self) {
                                 // CLEAR BUTTON TEXT
                                 // Clear variables.
                                 init_module_global_variables();
-                                clearCurrentCueOverUnder();
+                                Helpers.clearCurrentCueOverUnder(self);
                                 Helpers.resetVariables(self, [
                                     'project_',
                                     'sheet_',
@@ -187,7 +189,7 @@ module.exports = function (self) {
                 
                 // CLEAR BUTTON TEXT
                 // Define only cue manager variables. We don't want to clear device/session variables.
-                clearCurrentCueOverUnder();
+                Helpers.clearCurrentCueOverUnder(self);
                 Helpers.resetVariables(self, [
                     'project_',
                     'sheet_',
@@ -230,7 +232,7 @@ module.exports = function (self) {
                         Helpers.empty(data, 'updates', 'sheet', 'my_position_current_row_uuid')
                         && Helpers.empty(data, 'updates', 'sheet', 'sheet_caller_position_current_row_uuid')
                     ){
-                        clearCurrentCueOverUnder();
+                        Helpers.clearCurrentCueOverUnder(self);
                     }
                     
                     
@@ -383,22 +385,6 @@ module.exports = function (self) {
         // VARIABLE(S) USED IN OTHER FUNCTIONS
         // We have finished checking
         checking_live_service_active = false;
-    }
-    
-    function clearCurrentCueOverUnder(){
-        // Reset function variables
-        self.setVariableValues({
-            'current_cue_position_created_at': '',
-            'current_cue_position_updated_at': ''
-        });
-        
-        Helpers.setCueDurations(self, 'current_cue', 0, 0);
-        
-        // Reset companion variables
-        Helpers.resetVariables(self, [
-            'current_cue_',
-            'next_cue_'
-        ]);
     }
     
     function setCurrentCueOverUnder(){
@@ -665,7 +651,7 @@ module.exports = function (self) {
             } else{
                 // No sheet is currently selected. Reset variables.
                 init_module_global_variables();
-                clearCurrentCueOverUnder();
+                Helpers.clearCurrentCueOverUnder(self);
                 Helpers.resetVariables(self, [
                     'project_',
                     'sheet_',
@@ -677,7 +663,7 @@ module.exports = function (self) {
         } else{
             // No sheet is currently selected. Reset variables.
             init_module_global_variables();
-            clearCurrentCueOverUnder();
+            Helpers.clearCurrentCueOverUnder(self);
             Helpers.resetVariables(self, [
                 'project_',
                 'sheet_',
@@ -688,226 +674,11 @@ module.exports = function (self) {
         }
     }
     
-    function callCueManagerCompanionService(self, method, endpoint){
-
-        var settingsValidation = Helpers.validateCMSettings(self.config);
-        
-        if(!Helpers.empty(self, 'config', 'personal_access_token')){
-            if(settingsValidation == 'OK'){
-
-                var options = {
-                    method: method,
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer '+self.config.personal_access_token,
-                        'User-Agent': Constants.USER_AGENT
-                    }
-                };
-            
-                var url = Helpers.trim(self.config.companion_service_base_endpoint, '/')+'/'+endpoint;
-                if(Helpers.configHasCellTextColumns(self.config) && self.config.store_cue_cell_text_as_variables_enabled){
-                    url += '?include[]=current_position_cells&include[]=next_position_cells';
-                }
-                
-                self.log('debug', '[Live] Live is calling Cue Manager companion service...');
-                
-                fetch(url, options).then(res => {
-                    
-                    return res.text().then(responseData => {
-                        var jsonData = null;
-                        var caughtError;
-                        
-                        if (responseData != null && responseData !== '' && responseData !== undefined) {
-                            try {
-                                jsonData = JSON.parse(responseData);
-
-                                
-                                if(res.status == 200){
-                                    // Sheet uuid
-                                    if(Helpers.isset(jsonData, 'sheet', 'uuid')){
-                                        self.setVariableValues({'sheet_uuid': jsonData.sheet.uuid});
-                                    }
-                                    
-                                    // Current position uuid
-                                    if(Helpers.isset(jsonData, 'current_position', 'regarding_row_name')){
-                                        self.setVariableValues({ 'current_cue_uuid': Helpers.buttonFriendlyText(jsonData.current_position.current_row_uuid) });
-                                    } else {
-                                        self.setVariableValues({ 'current_cue_uuid': '' });
-                                    }
-                                    
-                                    // Current cue number
-                                    if(Helpers.isset(jsonData, 'current_position', '_cue_number')){
-                                        self.setVariableValues({ 'current_cue_number': jsonData.current_position._cue_number});
-                                    } else {
-                                        self.setVariableValues({ 'current_cue_number': '' });
-                                    }
-                                    
-                                    // Current position name
-                                    if(Helpers.isset(jsonData, 'current_position', 'regarding_row_name')){
-                                        self.setVariableValues({ 'current_cue_name': Helpers.buttonFriendlyText(jsonData.current_position.regarding_row_name)});
-                                    } else {
-                                        self.setVariableValues({ 'current_cue_name': '' });
-                                    }
-                                    
-                                    // Next callable cue
-                                    if(Helpers.isset(jsonData, 'next_callable', 'name')){
-                                        self.setVariableValues({ 'next_cue_name': Helpers.buttonFriendlyText(jsonData.next_callable.name) });
-                                    } else {
-                                        self.setVariableValues({ 'next_cue_name': '' });
-                                    }
-                                    
-                                    
-                                    // Project/sheet/tenant/user names
-                                    if(Helpers.isset(jsonData, 'project', 'name')){
-                                        self.setVariableValues({'project_name': Helpers.buttonFriendlyText(jsonData.project.name)});
-                                    }
-                                    if(Helpers.isset(jsonData, 'sheet', 'name')){
-                                        self.setVariableValues({'sheet_name': Helpers.buttonFriendlyText(jsonData.sheet.name)});
-                                    }
-                                    if(Helpers.isset(jsonData, 'tenant', 'name')){
-                                        self.setVariableValues({'tenant_name': Helpers.buttonFriendlyText(jsonData.tenant.name)});
-                                    }
-                                    if(Helpers.isset(jsonData, 'user', 'name')){
-                                        self.setVariableValues({'user_name': Helpers.buttonFriendlyText(jsonData.user.name)});
-                                    }
-                                    
-                                    
-                                    // Duration variables
-                                    if(!Helpers.empty(jsonData, 'current_position')){
-                                        Helpers.setCueDurations(
-                                            self,
-                                            'current_cue',
-                                            jsonData.current_position.regarding_row_duration,
-                                            jsonData.current_position.duration_offset
-                                        );
-                                    }
-                                    if(!Helpers.empty(jsonData, 'next_callable')){
-                                        Helpers.setCueDurations(
-                                            self,
-                                            'next_cue',
-                                            jsonData.next_callable.duration,
-                                            0
-                                        );
-                                    }
-                                    
-                                    
-                                    // Cell Text Variables
-                                    if(Helpers.configHasCellTextColumns(self.config) && self.config.store_cue_cell_text_as_variables_enabled){
-                                        if(!Helpers.empty(jsonData, 'current_position', 'cells')){
-                                            // Loop through 4 cell text column names (We support 4)
-                                            var i;
-                                            for(i = 1; i <= 4; i ++){
-                                                var col_name_id = Helpers.idifyColumnName(self.config['current_cue_cell_text_column_'+i]);
-                                                if(!Helpers.empty(jsonData, 'current_position', 'cells', col_name_id)){
-                                                    self.setVariableValues({['current_cue_cell_text_column_'+i]: Helpers.buttonFriendlyText(jsonData.current_position.cells[col_name_id])});
-                                                } else{
-                                                    self.setVariableValues({['current_cue_cell_text_column_'+i]: ''});
-                                                }
-                                            }
-                                        }
-                                        
-                                        if(!Helpers.empty(jsonData, 'next_callable', 'cells')){
-                                            // Loop through 4 cell text column names (We support 4)
-                                            var i;
-                                            for(i = 1; i <= 4; i ++){
-                                                var col_name_id = Helpers.idifyColumnName(self.config['current_cue_cell_text_column_'+i]);
-                                                if(!Helpers.empty(jsonData, 'next_callable', 'cells', col_name_id)){
-                                                    self.setVariableValues({['next_cue_cell_text_column_'+i]: Helpers.buttonFriendlyText(jsonData.next_callable.cells[col_name_id])});
-                                                } else{
-                                                    self.setVariableValues({['next_cue_cell_text_column_'+i]: ''});
-                                                }
-                                            }
-                                        }
-                                    }
-                                    
-                                    
-                                    // VARIABLE(S) USED IN OTHER FUNCTIONS
-                                    // Cue duration, offset, & over/under
-                                    self.setVariableValues({
-                                        'sheet_starts_at': jsonData.sheet.starts_at,
-                                        'sheet_ends_at': jsonData.sheet.ends_at
-                                    });
-                                    if(!Helpers.empty(jsonData, 'current_position')){
-                                        self.setVariableValues({
-                                            'current_cue_position_created_at': jsonData.current_position.created_at,
-                                            'current_cue_position_updated_at': jsonData.current_position.updated_at
-                                        });
-                                    }
-                                    
-                                    
-                                    // VARIABLE(S) USED IN OTHER FUNCTIONS
-                                    // Sheet over/under
-                                    if(!Helpers.empty(jsonData, 'sheet')){
-                                        Helpers.setSheetDurationTotals(
-                                            self,
-                                            jsonData.sheet.duration_total,
-                                            jsonData.sheet.duration_remaining_excluding_current
-                                        );
-                                    }
-                                } else if(res.status == 401){
-                                    Helpers.updateStatus(self, 'authentication_failure', 'Invalid personal access token.');
-                                }
-
-                                Helpers.updateStatus(self, 'ok');
-                            } catch(error){
-                                caughtError = error;
-                                Helpers.updateStatus(self, 'unknown_error', 'JSON body not returned.');
-                                self.log('error', '[Live] '+error);
-                            }
-                        }
-
-                        if(res.status >= 400){
-                            if(res.status == 404){
-                                Helpers.updateStatus(self, 'unknown_warning', 'Companion Status: '+res.status+' - Sheet not connected.');
-                                self.log('error', '[Live] Companion service HTTP status: '+res.status+' - Sheet not connected.');
-                            } else if(res.status == 404){
-                                Helpers.updateStatus(self, 'unknown_warning', 'Companion Status: '+res.status+' - Sheet is too old to call cues.');
-                                self.log('error', '[Live] Companion service HTTP status: '+res.status+' - Sheet is too old to call cues.');
-                            } else{
-                                Helpers.updateStatus(self, 'unknown_warning', 'Companion Status: '+res.status+' - '+Helpers.getStatusCodeText(res.status));
-                                self.log('error', '[Live] Companion service HTTP status: '+res.status, Helpers.getStatusCodeText(res.status));
-                            }
-                            
-                            // Clear cue manager variables if no sheet connected.
-                            if(Helpers.empty(jsonData, 'sheet')){
-                                
-                                clearCurrentCueOverUnder();
-                                
-                                // Clear variables.
-                                Helpers.resetVariables(self, [
-                                    'project_',
-                                    'sheet_',
-                                    'current_cue_',
-                                    'next_cue_',
-                                    'following_'
-                                ]);
-                            }
-                        } else if(Helpers.empty(caughtError)){
-                            Helpers.updateStatus(self, 'ok');
-                        }
-
-                    });
-                }).catch(error => {
-                    Helpers.updateStatus(self, 'unknown_warning', 'API network error.');
-                    self.log('error', '[Live] '+error);
-                });
-            
-            } else{
-                Helpers.updateStatus(self, 'unknown_warning', settingsValidation);
-                self.log('error', '[Live] '+settingsValidation);
-            }
-        } else{
-            Helpers.updateStatus(self, 'unknown_warning', 'Personal access token empty.');
-            self.log('error', '[Live] Personal access token cannot be empty.');
-        }
-    }
-    
     function initLiveService(){
         // First, we want to get initial project, sheet, user, tenant, and position info as current_position
         setTimeout(function(self){
             if(self.getVariableValue('clock_sync_initialized') == '1'){
-                callCueManagerCompanionService(self, 'GET', 'current_position');
+                Actions.callCueManagerCompanionService(self, 'GET', 'current_position', null);
             }
         }, 2000, self); // Space out API calls in case the connection gets stuck in retry loop.
         
@@ -920,7 +691,7 @@ module.exports = function (self) {
                 
                 // If sheet was disconnected then reconnected, call CM API to get position
                 if(Helpers.empty(self.getVariableValue('sheet_uuid'))){
-                    callCueManagerCompanionService(self, 'GET', 'current_position');
+                    Actions.callCueManagerCompanionService(self, 'GET', 'current_position', null);
                 }
             }
         }, 15000, self);
@@ -931,7 +702,7 @@ module.exports = function (self) {
             if(self.getVariableValue('clock_sync_initialized') == '1'){ // Don't do anything unless we have clock sync.
                 
                 // Make sure the sheet is still connected to eliminate vampire devices from keeping a connection
-                callCueManagerCompanionService(self, 'GET', 'current_position');
+                Actions.callCueManagerCompanionService(self, 'GET', 'current_position', null);
             }
         }, 181000, self);
         
