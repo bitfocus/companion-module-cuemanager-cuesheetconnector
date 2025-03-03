@@ -377,6 +377,25 @@ module.exports = function (self) {
             }],
             feedbacks: [],
         },
+        current_cue_number_of_total: { 
+            type: 'button',
+            category: 'Names',
+            name: 'Current Cue Number of Total (e.g., 2/98)',
+            style: {
+                show_topbar: false,
+                text: '$(cuemanager-cuesheetconnector:current_cue_number_of_total)',
+                size: 'auto',
+                color: '#000000',
+                bgcolor: '#0D9CF3',
+            },
+            steps: [{
+                down: [{
+                    actionId: 'get_current_position'
+                }],
+                up: []
+            }],
+            feedbacks: [],
+        },
         current_cue_name: { 
             type: 'button',
             category: 'Names',

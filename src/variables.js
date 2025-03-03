@@ -136,6 +136,11 @@ module.exports = function (self) {
 			_cmDefault: ''
 		},
 		{
+			variableId: 'sheet_cues_total',
+			name: 'The total number of cues in the current sheet.',
+			_cmDefault: 0
+		},
+		{
 			variableId: 'sheet_total_runtime_hhmmss',
 			name: 'The total runtime of the current sheet in HH:MM:SS.',
 			_cmDefault: '00:00:00'
@@ -333,7 +338,12 @@ module.exports = function (self) {
 		{
 			variableId: 'current_cue_number',
 			name: 'The number of the current cue.',
-			_cmDefault: 'Current Cue Number'
+			_cmDefault: null
+		},
+		{
+			variableId: 'current_cue_number_of_total',
+			name: 'The current cue number of total cues (e.g., 4/67).',
+			_cmDefault: ''
 		},
 		{
 			variableId: 'current_cue_name',

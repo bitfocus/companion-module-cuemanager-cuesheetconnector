@@ -239,6 +239,8 @@ module.exports = function (self) {
                         'sheet_name': Helpers.buttonFriendlyText(data.updates.sheet.name),
                         'current_cue_uuid': Helpers.buttonFriendlyText(data.updates.sheet.current_position_row_uuid),
                         'current_cue_number': data.updates.sheet.current_position_cue_number,
+                        'current_cue_number_of_total': data.updates.sheet.current_position_cue_number+'/'+data.updates.sheet.cues_total,
+                        'sheet_cues_total': data.updates.sheet.cues_total,
                         'current_cue_name': Helpers.buttonFriendlyText(data.updates.sheet.current_position_row_name),
                         'next_cue_name': Helpers.buttonFriendlyText(data.updates.sheet.next_position_row_name)
                     });
