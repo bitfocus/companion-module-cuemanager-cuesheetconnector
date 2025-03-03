@@ -175,8 +175,6 @@ class Actions{
 											'current_cue_uuid': jsonData.current_position.current_row_uuid,
 											'current_cue_name': Helpers.buttonFriendlyText(jsonData.current_position.regarding_row_name),
 											'current_cue_number': jsonData.current_position._cue_number,
-											'current_cue_number_of_total': jsonData.current_position._cue_number+'/'+jsonData.current_position._cues_total,
-											'sheet_cues_total': jsonData.current_position._cues_total,
 											'current_cue_position_created_at': jsonData.current_position.created_at,
 											'current_cue_position_updated_at': jsonData.current_position.updated_at
 										});
@@ -185,11 +183,20 @@ class Actions{
 											'current_cue_uuid': '',
 											'current_cue_name': '',
 											'current_cue_number': null,
-											'current_cue_number_of_total': '/0',
-											'sheet_cues_total': 0,
 											'current_cue_position_created_at': '',
 											'current_cue_position_updated_at': ''
 										});
+									}
+									
+									// Process cue number of total
+									if(Helpers.isset(jsonData, 'sheet', '_cues_total') && Helpers.isset(jsonData, 'current_position', '_cue_number')){
+										self.setVariableValues({'current_cue_number_of_total': jsonData.current_position._cue_number+'/'+jsonData.sheet._cues_total});
+									} else if(Helpers.isset(jsonData, 'current_position', '_cues_total') && Helpers.isset(jsonData, 'current_position', '_cue_number')){
+										self.setVariableValues({'current_cue_number_of_total': jsonData.current_position._cue_number+'/'+jsonData.current_position._cues_total});
+									} else if(Helpers.isset(jsonData, 'sheet', '_cues_total')){
+										self.setVariableValues({'current_cue_number_of_total': '0/'+jsonData.sheet._cues_total});
+									} else{
+										self.setVariableValues({'current_cue_number_of_total': '0/0'});
 									}
 
 									// Process Next Callable Cue
@@ -208,7 +215,8 @@ class Actions{
 											'sheet_uuid': jsonData.sheet.uuid,
 											'sheet_name': Helpers.buttonFriendlyText(jsonData.sheet.name),
 											'sheet_starts_at': jsonData.sheet.starts_at,
-											'sheet_ends_at': jsonData.sheet.ends_at
+											'sheet_ends_at': jsonData.sheet.ends_at,
+											'sheet_cues_total': jsonData.sheet._cues_total,
 										});
 									}
 									if(Helpers.isset(jsonData, 'tenant', 'name')){

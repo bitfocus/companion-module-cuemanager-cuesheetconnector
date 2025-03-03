@@ -246,6 +246,16 @@ module.exports = function (self) {
                     });
                     
                     
+                    // Process cue number of total
+                    if(Helpers.isset(data, 'updates', 'sheet', 'current_position_cue_number') && Helpers.isset(data, 'updates', 'sheet', 'cues_total')){
+                        self.setVariableValues({'current_cue_number_of_total': data.updates.sheet.current_position_cue_number+'/'+data.updates.sheet.cues_total});
+                    } else if(Helpers.isset(data, 'updates', 'sheet', 'cues_total')){
+                        self.setVariableValues({'current_cue_number_of_total': '0/'+data.updates.sheet.cues_total});
+                    } else{
+                        self.setVariableValues({'current_cue_number_of_total': '0/0'});
+                    }
+                    
+                    
                     
                     // Cell Text Variables
                     if(Helpers.configHasCellTextColumns(self.config) && self.config.store_cue_cell_text_as_variables_enabled){
