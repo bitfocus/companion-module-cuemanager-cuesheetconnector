@@ -11,29 +11,15 @@ const Clock = require('./clock');
 module.exports = function (self) {
     
     // Global variables used/updated in functions
-    var checking_live_service_active;
+    var checking_live_service_active = false;
     var try_first_call_interval;
-    var live_service_first_called;
-    var live_service_last_5xx_error;
-    var live_updated_after;
-    var live_service_call_status;
-    var live_service_call_status_time;
-    var live_service_call_retries;
-    var live_service_unauthorized;
-    
-    function init_module_global_variables(){
-        checking_live_service_active = false;
-        try_first_call_interval;
-        live_service_first_called = false;
-        live_service_last_5xx_error = 0;
-        live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
-        live_service_call_status = 1;
-        live_service_call_status_time = self.getVariableValue('clock_utc_unix_seconds');
-        live_service_call_retries = 0;
-        live_service_unauthorized = false;
-    }
-    
-    init_module_global_variables();
+    var live_service_first_called = false;
+    var live_service_last_5xx_error = 0;
+    Globals.live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
+    var live_service_call_status = 1;
+    var live_service_call_status_time = self.getVariableValue('clock_utc_unix_seconds');
+    var live_service_call_retries = 0;
+    var live_service_unauthorized = false;
     
     
     
@@ -50,7 +36,6 @@ module.exports = function (self) {
     
     // Initialize updaters, checks, and timers
     initLiveService();
-    
     
     
     
@@ -80,8 +65,9 @@ module.exports = function (self) {
                 };
             
                 var url = Helpers.trim(self.config.live_service_base_endpoint, '/')+'/'+self.getVariableValue('sheet_uuid');
-                url += '?updated_after='+live_updated_after+'&btab_id='+'companion_'+Constants.SESSION_TOKEN;
+                url += '?updated_after='+Globals.live_updated_after+'&btab_id='+'companion_'+Constants.SESSION_TOKEN;
                 url += '&accept=application%2Fjson&include[]=next_position&include[]=duration_totals&include[]=cue_number';
+                url += '&include[]=is_connected_companion_sheet';
                 if(Helpers.configHasCellTextColumns(self.config) && self.config.store_cue_cell_text_as_variables_enabled){
                     url += '&include[]=current_position_cells&include[]=next_position_cells';
                 }
@@ -144,7 +130,6 @@ module.exports = function (self) {
                             if(res.status == 404){
                                 // CLEAR BUTTON TEXT
                                 // Clear variables.
-                                init_module_global_variables();
                                 Helpers.clearCurrentCueOverUnder(self);
                                 Helpers.resetVariables(self, [
                                     'project_',
@@ -208,9 +193,9 @@ module.exports = function (self) {
     function receiveLiveServiceData(self, data){
         if(!Helpers.empty(self.getVariableValue('sheet_uuid'))){
             
-            //  Update live_updated_after and call live service
+            //  Update Globals.live_updated_after and call live service
             if(!Helpers.empty(data, 'updates', 'query_timestamp')){
-                live_updated_after = data.updates.query_timestamp;
+                Globals.live_updated_after = data.updates.query_timestamp;
             }
             
             
@@ -226,8 +211,18 @@ module.exports = function (self) {
                 if(Helpers.isset(data, 'updates', 'sheet', 'current_position_row_name')){
                     self.log('debug', '[Live] Sheet position retrieved.');
                     
+                    
+                    // Get current_position if new sheet detected
+                    if(Helpers.isset(data, 'updates', 'sheet', 'is_connected_companion_sheet')){
+                        if(data.updates.sheet.is_connected_companion_sheet != true){
+                            self.log('debug', '[Live] Connected sheet has changed. Checking for connected sheet...');
+                            Actions.callCueManagerCompanionService(self, 'GET', 'current_position', null);
+                            return;
+                        }
+                    }
+                    
 
-                    // Clear over/under timers
+                    // Clear over/under timers if no position set
                     if(
                         Helpers.empty(data, 'updates', 'sheet', 'my_position_current_row_uuid')
                         && Helpers.empty(data, 'updates', 'sheet', 'sheet_caller_position_current_row_uuid')
@@ -610,6 +605,7 @@ module.exports = function (self) {
                     });
                 }
                 
+                
                 // Set countdown to start
                 
                 var sheet_countdown_to_start_milliseconds = start_time - now;
@@ -650,7 +646,6 @@ module.exports = function (self) {
                 }
             } else{
                 // No sheet is currently selected. Reset variables.
-                init_module_global_variables();
                 Helpers.clearCurrentCueOverUnder(self);
                 Helpers.resetVariables(self, [
                     'project_',
@@ -662,7 +657,6 @@ module.exports = function (self) {
             }
         } else{
             // No sheet is currently selected. Reset variables.
-            init_module_global_variables();
             Helpers.clearCurrentCueOverUnder(self);
             Helpers.resetVariables(self, [
                 'project_',
@@ -697,16 +691,6 @@ module.exports = function (self) {
         }, 15000, self);
         
         
-        // 03m01s checks
-        setInterval(function(self){
-            if(self.getVariableValue('clock_sync_initialized') == '1'){ // Don't do anything unless we have clock sync.
-                
-                // Make sure the sheet is still connected to eliminate vampire devices from keeping a connection
-                Actions.callCueManagerCompanionService(self, 'GET', 'current_position', null);
-            }
-        }, 181000, self);
-        
-        
         // Cue sheet timers
         setInterval(() => {
             if(self.getVariableValue('clock_sync_initialized') == '1'){
@@ -723,8 +707,8 @@ module.exports = function (self) {
                 if(!Helpers.empty(self.getVariableValue('sheet_uuid')) && Helpers.isset(self, 'config')){
                     if(live_service_first_called == false){
                         if(Helpers.validateCMSettings(self.config) === 'OK') {
-                            // Set live_updated_after with current time (Offset may change);
-                            live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
+                            // Set Globals.live_updated_after with current time (Offset may change);
+                            Globals.live_updated_after = self.getVariableValue('clock_utc_unix_seconds');
                             // Call the service
                             callCueManagerLiveService(self);
                         }

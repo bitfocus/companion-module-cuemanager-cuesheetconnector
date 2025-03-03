@@ -147,6 +147,28 @@ class Actions{
 							try{
 								jsonData = JSON.parse(responseData);
 								if(status_code === 200){
+									// Clear variables and timers if new sheet detected
+									if(Helpers.isset(jsonData, 'sheet', 'uuid')){
+										if(self.getVariableValue('sheet_uuid') != jsonData.sheet.uuid){
+											Helpers.clearCurrentCueOverUnder(self);
+											Helpers.resetVariables(self, [
+												'project_',
+												'sheet_',
+												'current_cue_',
+												'next_cue_',
+												'following_'
+											]);
+											
+											// Set global live_updated_after using DB query_timestamp from API.
+											// Using DB time will ensure no updates are lost in live.js.
+											if(!Helpers.empty(jsonData, 'current_position', 'query_timestamp')){
+												Globals.live_updated_after = jsonData.current_position.query_timestamp;
+											} else if(!Helpers.empty(jsonData, 'sheet', 'query_timestamp')){
+												Globals.live_updated_after = jsonData.sheet.query_timestamp;
+											}
+										}
+									}
+									
 									// Process Current Position
 									if(Helpers.isset(jsonData, 'current_position', 'current_row_uuid')){
 										self.setVariableValues({
@@ -264,7 +286,7 @@ class Actions{
 								Helpers.updateStatus(self, 'unknown_warning', 'Action Status: ' + status_code + ' - ' + Helpers.getStatusCodeText(status_code));
 								self.log('error', '[Actions] Companion service HTTP status: ' + res.status, Helpers.getStatusCodeText(res.status));
 							}
-							self.log('error', responseData);
+							
 							if(endpoint === 'current_position' && Helpers.empty(jsonData, 'sheet')){
 								Helpers.clearCurrentCueOverUnder(self);
 								Helpers.resetVariables(self, [
