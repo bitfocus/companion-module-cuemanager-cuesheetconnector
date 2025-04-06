@@ -28,6 +28,7 @@ module.exports = async function(self){
 						{id: 'sheet_duration_remaining_seconds', label: 'sheet_duration_remaining_seconds'},
 						{id: 'sheet_duration_remaining_excluding_current_seconds', label: 'sheet_duration_remaining_excluding_current_seconds'},
 						{id: 'status', label: 'status'},
+						{id: 'current_cue_position_is_paused', label: 'current_cue_position_is_paused'},
 						{id: 'clock_sync_initialized', label: 'clock_sync_initialized'},
 						{id: 'device_time_offset_seconds', label: 'device_time_offset_seconds'},
 						{id: 'device_time_offset_milliseconds', label: 'device_time_offset_milliseconds'},
@@ -95,6 +96,11 @@ module.exports = async function(self){
 					return_color = true;
 				} else if(feedback.options.comparison_operator == '<=' && match_variable <= compare_value){
 					return_color = true;
+				}
+				
+				// Button color cycling
+				if(feedback.options.color_cycle == true && match_variable == compare_value){
+					var return_color = Math.floor(Date.now() / 500) % 2 === 0 ? true : false;
 				}
 				
 				// Return styling if condition is true.

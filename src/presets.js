@@ -58,7 +58,22 @@ module.exports = function (self) {
                 }],
                 up: []
             }],
-            feedbacks: [],
+            feedbacks: [
+                {
+                    feedbackId: 'change_button_style_on_conditional',
+                    options: {
+                        variable_id: 'current_cue_position_is_paused',
+                        compare_value: '1',
+                        compare_as_lowercase: false,
+                        comparison_operator: '==',
+                        color_cycle: true
+                    },
+                    style:{
+                        color: '#FFFFFF',
+                        bgcolor: '#000000',
+                    }
+                }
+            ],
         },
         clear_position: { 
             type: 'button',
