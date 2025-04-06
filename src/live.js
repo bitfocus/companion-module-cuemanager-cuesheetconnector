@@ -308,13 +308,19 @@ module.exports = function (self) {
                         duration_offset = data.updates.sheet.my_position_duration_offset;
                         self.setVariableValues({
                             'current_cue_position_created_at': data.updates.sheet.my_position_created_at,
-                            'current_cue_position_updated_at': data.updates.sheet.my_position_updated_at
+                            'current_cue_position_updated_at': data.updates.sheet.my_position_updated_at,
+                            'current_cue_position_is_paused': data.updates.sheet.my_position_is_paused,
+                            'current_cue_position_seconds_paused': data.updates.sheet.my_position_seconds_paused,
+                            'current_cue_position_last_paused_at': data.updates.sheet.my_position_last_paused_at
                         });
                     } else if(!Helpers.empty(data, 'updates', 'sheet', 'sheet_caller_position_duration_offset')){
                         duration_offset = data.updates.sheet.sheet_caller_position_duration_offset;
                         self.setVariableValues({
                             'current_cue_position_created_at': data.updates.sheet.sheet_caller_position_created_at,
-                            'current_cue_position_updated_at': data.updates.sheet.sheet_caller_position_updated_at
+                            'current_cue_position_updated_at': data.updates.sheet.sheet_caller_position_updated_at,
+                            'current_cue_position_is_paused': data.updates.sheet.sheet_caller_position_is_paused,
+                            'current_cue_position_seconds_paused': data.updates.sheet.sheet_caller_position_seconds_paused,
+                            'current_cue_position_last_paused_at': data.updates.sheet.sheet_caller_position_last_paused_at
                         });
                     }
                     
@@ -400,7 +406,7 @@ module.exports = function (self) {
         var offset = self.getVariableValue('current_cue_duration_offset_seconds');
         var updated_at = self.getVariableValue('current_cue_position_updated_at');
         
-        if((!Helpers.empty(duration) || duration == '0') &&!Helpers.empty(updated_at) && !isNaN(duration)){
+        if((!Helpers.empty(duration) || duration == '0') && !Helpers.empty(updated_at) && !isNaN(duration)){
             
             // Calculate milliseconds
             var duration_milliseconds = parseInt(duration) * 1000;
@@ -413,7 +419,7 @@ module.exports = function (self) {
             
             
             // Calculate the over/under and elapsed time
-            var updated_at_local_milliseconds = Clock.localTime(self, Clock.strtotime(updated_at));
+            var updated_at_local_milliseconds = Clock.localTime(self, Clock.strtotime(self, updated_at));
             if(duration_milliseconds > 0){
                 var time_elapsed_since_called_milliseconds = Clock.localTime(self, self.getVariableValue('clock_utc_unix_milliseconds')) - updated_at_local_milliseconds;
                 var cue_over_under_milliseconds = time_elapsed_since_called_milliseconds - duration_milliseconds;
@@ -421,6 +427,11 @@ module.exports = function (self) {
                 var time_elapsed_since_called_milliseconds = 0;
                 var cue_over_under_milliseconds = 0;
             }
+            
+            
+            // Calculate seconds paused
+            var seconds_paused = Helpers.calculate_seconds_paused(self, true);
+            cue_over_under_milliseconds = cue_over_under_milliseconds - (seconds_paused * 1000)
             
             
             // Set companion variables
@@ -470,6 +481,8 @@ module.exports = function (self) {
         var current_cue_updated_at = self.getVariableValue('current_cue_position_updated_at');
         var sheet_starts_at = self.getVariableValue('sheet_starts_at');
         var sheet_ends_at = self.getVariableValue('sheet_ends_at');
+        var is_paused = parseInt(self.getVariableValue('current_cue_position_is_paused'));
+        var seconds_paused = Helpers.calculate_seconds_paused(self, false);
         
         if((!Helpers.empty(duration_total) || duration_total == '0') && !isNaN(duration_total)){
             // Calculate milliseconds
@@ -491,27 +504,33 @@ module.exports = function (self) {
                 }
                 
                 // Elapsed and remaining
-                time_elapsed_since_called_milliseconds = Clock.localTime(self, self.getVariableValue('clock_utc_unix_milliseconds')) - Clock.localTime(self, Clock.strtotime(current_cue_updated_at));
+                time_elapsed_since_called_milliseconds = Clock.localTime(self, self.getVariableValue('clock_utc_unix_milliseconds')) - Clock.localTime(self, Clock.strtotime(self, current_cue_updated_at));
                 current_cue_remaining_milliseconds = (time_elapsed_since_called_milliseconds - current_cue_duration_milliseconds);
             }
             
             
             // Calculate the projected end time
-            var projected_finish_milliseconds = Clock.localTime(self, Clock.strtotime(current_cue_updated_at)) + duration_remaining_milliseconds + current_cue_duration_milliseconds;
+            var projected_finish_milliseconds = Clock.localTime(self, Clock.strtotime(self, current_cue_updated_at)) + duration_remaining_milliseconds + current_cue_duration_milliseconds;
             if(current_cue_remaining_milliseconds > 0){
                 // Take into account the current cue.
                 projected_finish_milliseconds = projected_finish_milliseconds + current_cue_remaining_milliseconds;
+
+                console.log('up '+duration_remaining_milliseconds+' '+projected_finish_milliseconds +' - '+(seconds_paused * 1000) +' + '+ 20000);
+            } else{
+
+                console.log('dn '+duration_remaining_milliseconds+' '+projected_finish_milliseconds +' - '+(seconds_paused * 1000) +' + '+ 20000);
             }
+            projected_finish_milliseconds = projected_finish_milliseconds - (seconds_paused * 1000);
             
             
             // Over/under
             if(!Helpers.empty(sheet_starts_at) && !Helpers.empty(sheet_ends_at)){
-                var start_time = Clock.strtotime(sheet_starts_at);
-                var end_time = Clock.strtotime(sheet_ends_at);
+                var start_time = Clock.strtotime(self, sheet_starts_at);
+                var end_time = Clock.strtotime(self, sheet_ends_at);
                 var now = Clock.utcTime(self);
                 
                 // Calculate when the sheet "should" be finished by based on the start time of the sheet
-                var target_finish_milliseconds = Clock.localTime(self, Clock.strtotime(sheet_starts_at)) + duration_total_milliseconds;
+                var target_finish_milliseconds = Clock.localTime(self, Clock.strtotime(self, sheet_starts_at)) + duration_total_milliseconds;
                 
                 
                 if(now < end_time && !Helpers.empty(current_cue_created_at)){
@@ -524,6 +543,7 @@ module.exports = function (self) {
                     } else{
                         var sheet_over_under_milliseconds = projected_finish_milliseconds - target_finish_milliseconds; // Needs -1000 to match App UI?
                     }
+                    
                     
                     // Set over/under companion variables
                     self.setVariableValues({
@@ -541,6 +561,7 @@ module.exports = function (self) {
                     
                     
                     // Calculate over/under
+                    console.log('test');
                     projected_finish_milliseconds = Clock.localTime(self, self.getVariableValue('clock_utc_unix_milliseconds'));
                     if(projected_finish_milliseconds > target_finish_milliseconds){
                         var sheet_over_under_milliseconds = target_finish_milliseconds - projected_finish_milliseconds;

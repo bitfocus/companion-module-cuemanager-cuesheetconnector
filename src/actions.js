@@ -176,7 +176,10 @@ class Actions{
 											'current_cue_name': Helpers.buttonFriendlyText(jsonData.current_position.regarding_row_name),
 											'current_cue_number': jsonData.current_position._cue_number,
 											'current_cue_position_created_at': jsonData.current_position.created_at,
-											'current_cue_position_updated_at': jsonData.current_position.updated_at
+											'current_cue_position_updated_at': jsonData.current_position.updated_at,
+											'current_cue_position_is_paused': jsonData.current_position.is_paused,
+											'current_cue_position_seconds_paused': jsonData.current_position.seconds_paused,
+											'current_cue_position_last_paused_at': jsonData.current_position.last_paused_at
 										});
 									} else{
 										self.setVariableValues({
@@ -184,7 +187,10 @@ class Actions{
 											'current_cue_name': '',
 											'current_cue_number': null,
 											'current_cue_position_created_at': '',
-											'current_cue_position_updated_at': ''
+											'current_cue_position_updated_at': '',
+											'current_cue_position_is_paused': '',
+											'current_cue_position_seconds_paused': '',
+											'current_cue_position_last_paused_at': ''
 										});
 									}
 									
@@ -244,7 +250,8 @@ class Actions{
 											jsonData.next_callable.duration,
 											0
 										);
-									} else if(endpoint === 'adjust_cue_duration' && !Helpers.empty(jsonData, 'sheet')){
+									}
+									if(['adjust_cue_duration', 'current_position'].includes(endpoint) && !Helpers.empty(jsonData, 'sheet')){
 										Helpers.setSheetDurationTotals(
 											self,
 											jsonData.sheet.duration_total,

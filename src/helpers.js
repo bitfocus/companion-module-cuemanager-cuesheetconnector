@@ -368,6 +368,47 @@ class Helpers{
         }
     }
     
+    calculate_seconds_paused(self, is_cue_timer = false){
+        var is_paused = parseInt(self.getVariableValue('current_cue_position_is_paused'));
+        if(is_cue_timer){
+            // Only include seconds_paused for cue timers
+            var seconds_paused = parseInt(self.getVariableValue('current_cue_position_seconds_paused'));
+        } else{
+            // Seconds paused not included for sheet level timers
+            var seconds_paused = 0;
+        }
+        var last_paused_at = self.getVariableValue('current_cue_position_last_paused_at');
+        
+        if(this.isset(seconds_paused) && !this.empty(last_paused_at)){
+            if(is_paused == 1){
+                // Match date formats: space-separated or T-separated with optional fractional seconds
+                const match = last_paused_at.match(/^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2}:\d{2})(\.\d+)?$/);
+                if(!match){
+                    return 0; // Invalid format
+                }
+                const [_, datePart, timePart, fractionalSeconds] = match;
+                // Combine date and time into UTC format
+                let dateTimeString = `${datePart}T${timePart}${fractionalSeconds || ''}Z`; // Ensure it's in UTC with "Z" at the end
+                const parsedDate = new Date(dateTimeString);
+                    
+                    
+                // Add seconds since last paused to seconds_paused
+                seconds_paused = Math.ceil(
+                    seconds_paused +
+                    (
+                        (
+                            parseInt(self.getVariableValue('clock_utc_unix_milliseconds'))
+                            - (parsedDate.getTime())
+                        )
+                        / 1000
+                    )
+                );
+            }
+        }
+        
+        return seconds_paused;
+    }
+    
     clearCurrentCueOverUnder(self){
         // Reset function variables
         self.setVariableValues({

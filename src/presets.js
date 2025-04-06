@@ -746,7 +746,7 @@ module.exports = function (self) {
         sheet_over_under_hhmmss: {
             type: 'button',
             category: 'Timers',
-            name: 'Current Cue Over/Under MM:SS',
+            name: 'Sheet Over/Under MM:SS',
             style: {
                 show_topbar: false,
                 text: 'Sheet\n$(cuemanager-cuesheetconnector:sheet_over_under_hh):$(cuemanager-cuesheetconnector:sheet_over_under_mm):$(cuemanager-cuesheetconnector:sheet_over_under_ss)',

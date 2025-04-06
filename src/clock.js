@@ -308,7 +308,7 @@ class Clock{
         return isNegative ? `-${result}` : `+${result}`; // Add + or - sign
     }
     
-    strtotime(text){
+    strtotime(self, text){
         if(typeof text == 'string'){
             // Handle the "now" string (current time)
             if(text.toLocaleLowerCase() === 'now'){

@@ -336,6 +336,21 @@ module.exports = function (self) {
 			_cmDefault: ''
 		},
 		{
+			variableId: 'current_cue_position_is_paused',
+			name: 'Whether or not the current cue is paused.',
+			_cmDefault: ''
+		},
+		{
+			variableId: 'current_cue_position_seconds_paused',
+			name: 'The number of seconds paused for the current cue.',
+			_cmDefault: ''
+		},
+		{
+			variableId: 'current_cue_position_last_paused_at',
+			name: 'The time when the current cue position was last paused.',
+			_cmDefault: ''
+		},
+		{
 			variableId: 'current_cue_number',
 			name: 'The number of the current cue.',
 			_cmDefault: null
