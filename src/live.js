@@ -556,7 +556,6 @@ module.exports = function (self) {
                     
                     
                     // Calculate over/under
-                    console.log('test');
                     projected_finish_milliseconds = Clock.localTime(self, self.getVariableValue('clock_utc_unix_milliseconds'));
                     if(projected_finish_milliseconds > target_finish_milliseconds){
                         var sheet_over_under_milliseconds = target_finish_milliseconds - projected_finish_milliseconds;

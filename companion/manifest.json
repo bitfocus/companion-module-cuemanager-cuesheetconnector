@@ -1,7 +1,7 @@
 {
 	"id": "cuemanager-cuesheetconnector",
 	"name": "Cue Sheet Connector",
-	"version": "1.5.1",
+	"version": "1.5.2",
 	"shortname": "cuemanager-cuesheetconnector",
 	"description": "Collaborative real-time rundowns, schedules, timeliens, and project management tools for live events.",
 	"license": "MIT",
