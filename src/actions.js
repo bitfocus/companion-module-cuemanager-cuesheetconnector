@@ -23,6 +23,13 @@ class Actions{
 					instance.callCueManagerCompanionService(self, 'PATCH', 'go_to_next_cue');
 				},
 			},
+			pause_resume_timers: {
+				name: 'Pause/Resume Timers',
+				options: [],
+				callback: async (action) => {
+					instance.callCueManagerCompanionService(self, 'PATCH', 'pause_resume_timers');
+				},
+			},
 			clear_position: {
 				name: 'Clear Position',
 				options: [],
@@ -96,6 +103,7 @@ class Actions{
 		const delays = {
 			go_to_prev_cue: 750,
 			go_to_next_cue: 750,
+			pause_resume_timers: 500,
 			clear_position: 1000,
 			get_current_position: 1000,
 			sync_clock_to_cue_manager: 500,
@@ -234,7 +242,7 @@ class Actions{
 
 									// Set durations based on endpoint
 									if(endpoint === 'adjust_cue_duration' || endpoint === 'current_position'){
-										if (!Helpers.empty(jsonData, 'current_position', 'id')) {
+										if(!Helpers.empty(jsonData, 'current_position', 'id')){
 											Helpers.setCueDurations(
 												self,
 												'current_cue',

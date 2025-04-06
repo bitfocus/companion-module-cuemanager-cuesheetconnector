@@ -514,11 +514,6 @@ module.exports = function (self) {
             if(current_cue_remaining_milliseconds > 0){
                 // Take into account the current cue.
                 projected_finish_milliseconds = projected_finish_milliseconds + current_cue_remaining_milliseconds;
-
-                console.log('up '+duration_remaining_milliseconds+' '+projected_finish_milliseconds +' - '+(seconds_paused * 1000) +' + '+ 20000);
-            } else{
-
-                console.log('dn '+duration_remaining_milliseconds+' '+projected_finish_milliseconds +' - '+(seconds_paused * 1000) +' + '+ 20000);
             }
             projected_finish_milliseconds = projected_finish_milliseconds - (seconds_paused * 1000);
             

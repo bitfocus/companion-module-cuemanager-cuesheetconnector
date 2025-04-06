@@ -41,6 +41,25 @@ module.exports = function (self) {
             }],
             feedbacks: [],
         },
+        pause_resume_timers: { 
+            type: 'button',
+            category: 'Transport',
+            name: 'Pause/Resume Timers',
+            style: {
+                show_topbar: false,
+                png64: Icons.transport.pause,
+                size: 'auto',
+                color: '#000000',
+                bgcolor: '#ddb14d',
+            },
+            steps: [{
+                down: [{
+                    actionId: "pause_resume_timers"
+                }],
+                up: []
+            }],
+            feedbacks: [],
+        },
         clear_position: { 
             type: 'button',
             category: 'Transport',
