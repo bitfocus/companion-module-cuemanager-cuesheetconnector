@@ -1,4 +1,4 @@
-# companion-module-rundown-studio
+# Cue Manager Companion Module
 
 [Cue Manager](https://www.cuemanager.com) provides collaborative real-time cue sheets (rundowns), schedules, and project management tools for live events. This module allows you to connect your cue sheets to comapnion.
 
