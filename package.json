@@ -19,7 +19,7 @@
 		"prettier": "^3.0.0"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
-	"packageManager": "yarn@4.6.0",
+	"packageManager": "yarn@4.13.0",
 	"keywords": [],
 	"author": "",
 	"bugs": {
